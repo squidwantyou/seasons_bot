@@ -135,3 +135,4 @@ dumps
 logs
 *.logs
 xiaohua.list
+nohup.out
