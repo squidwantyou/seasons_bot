@@ -11,10 +11,8 @@ import glob
 def b64e(s):
     return base64.b64encode(s.encode()).decode()
 
-
 def b64d(s):
     return base64.b64decode(s).decode()
-
 
 #### Error
 def error(message,uid,gid = None):
@@ -25,18 +23,18 @@ def error(message,uid,gid = None):
     requests.post( url=url, data=data )
 
 #### Help
-                #/笑话  # 老板来一份苏联笑话
 def help(message,uid,gid = None):
     m = '''>>>>> 触手型自律机器人特性:
                 /吃什么
-                /加入菜单
+                /加入菜单       # 回复
                 /语录
-                /添加语录
-                /色图   
-                /添加色图       # 回复
+                /加入语录       # 回复
+                /瑟图   
+                /加入瑟图       # 回复
                 /?bga  @波奇    # 查询BGA账号
                 /+bga  @元首 MimicBox  # 录入BGA账号
                 /roll N         # 鱼唇的扔骰子 
+                /猜数字         # 或者 /1a2b 
                 /help           # 显示此消息
         '''
     data = {'group_id': gid  , 'message':m} 
@@ -45,20 +43,21 @@ def help(message,uid,gid = None):
     requests.post( url=url, data=data )
 
 #### 苏联笑话
-xiaohuas = dict()
-infile = 'xiaohua.list'
-index = 0
-current = ''
-for line in open(infile):
-        if len(line.split()) >= 1:
-                try:
-                        index = int(line)
-                        xiaohuas[index] = ''
-                except:
-                        xiaohuas[index] += line
-        else:
-                pass
-print(">>>>> Xiaohua loaded")
+if True:
+    xiaohuas = dict()
+    infile = 'xiaohua.list'
+    index = 0
+    current = ''
+    for line in open(infile):
+            if len(line.split()) >= 1:
+                    try:
+                            index = int(line)
+                            xiaohuas[index] = ''
+                    except:
+                            xiaohuas[index] += line
+            else:
+                    pass
+    print(">>>>> Xiaohua loaded")
 
 def xiaohua(message,uid,gid = None):
     key  = rd.choice( list(xiaohuas.keys()) )
@@ -293,7 +292,6 @@ def getid(message,uid,gid = None):
         except Exception as e:
                 error(message,uid,gid)
 
-
 # 扔骰子
 def roll(message,uid,gid):
         try:
@@ -306,4 +304,9 @@ def roll(message,uid,gid):
         except:
                 error(message,uid,gid)
         
-                
+# da
+def answer(message,uid,gid):
+    pass
+
+
+
