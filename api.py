@@ -1,10 +1,12 @@
 import requests
 import function as fc
 from analysis import *
-from guess_number import guess_number
+#from guess_number import guess_number
+from guess_number_2 import guess_number
 import ecy
 import scy
 import touhou
+import moyu
 
 def keyword(message,uid,gid = None):
     message = Message(message)
@@ -43,5 +45,7 @@ def keyword(message,uid,gid = None):
                 scy.scy(message,uid,gid)
             if true_startswith( message, '/车万','/touhou' ): 
                 touhou.touhou(message,uid,gid)
+            if true_startswith( message, '/摸鱼','/moyu' ): 
+                moyu.moyu(message,uid,gid)
 
 
