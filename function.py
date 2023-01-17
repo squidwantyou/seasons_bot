@@ -308,5 +308,12 @@ def roll(message,uid,gid):
 def answer(message,uid,gid):
     pass
 
+# 诗词
+def shici(message,uid,gid):
+    data = requests.get("https://v1.jinrishici.com/all.json")
+    text = json.loads(data.content)["content"]
+    analysis.send_msg( text, uid=uid,gid=gid )
+    
+
 
 

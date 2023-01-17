@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from flask import Flask, request
 import api
+import api2
 
 app = Flask(__name__)
 
@@ -11,6 +12,10 @@ def post_data():
 		uid = request.get_json().get('sender').get('user_id')
 		message = request.get_json().get('raw_message')
 		if gid == 144744787:
+			api.keyword(message,uid,gid)
+		if gid == 530879511:
+			api.keyword(message,uid,gid)
+		if gid == 528343595:
 			api.keyword(message,uid,gid)
 	return 'OK'
 

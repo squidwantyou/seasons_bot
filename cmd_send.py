@@ -16,5 +16,9 @@ data = {'group_id': gid  , 'message':m}
 url = 'http://0.0.0.0:5700/send_group_msg'
 requests.post( url=url, data=data )
 
+#data = requests.get("https://cdn.seovx.com/d/?mom=json")
+#print(data.content.decode('utf-8'))
+#print(json.loads(data.content)["content"])
+
 
 
