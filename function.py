@@ -25,17 +25,15 @@ def error(message,uid,gid = None):
 #### Help
 def help(message,uid,gid = None):
     m = '''>>>>> 触手型自律机器人特性:
-                /吃什么
-                /加入菜单       # 回复
-                /语录
-                /加入语录       # 回复
-                /瑟图   
-                /加入瑟图       # 回复
-                /?bga  @波奇    # 查询BGA账号
-                /+bga  @元首 MimicBox  # 录入BGA账号
-                /roll N         # 鱼唇的扔骰子 
-                /猜数字         # 或者 /1a2b 
-                /help           # 显示此消息
+                /?bga  @波奇    
+                /+bga  @元首 MimicBox  
+                /吃什么 /加入菜单      
+                /语录   /加入语录     
+                /瑟图   /加入瑟图    
+                /猜数字 /guess
+                /摸鱼   /roll N         
+                /诗词   /help           
+                /abc def #自定义回复
         '''
     data = {'group_id': gid  , 'message':m} 
     url = 'http://0.0.0.0:5700/send_group_msg'

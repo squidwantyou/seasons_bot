@@ -7,6 +7,7 @@ import analysis
 apiurl = "https://www.loliapi.com/bg/"
 
 def ecy(message,uid=0,gid=0):
+    print(">>>>> Called ecy")
     try:
         headers = {
             'User-Agent': 'My User Agent 1.0',
