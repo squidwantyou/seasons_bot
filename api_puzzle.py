@@ -19,8 +19,8 @@ def keyword(message,uid,gid = None):
                 fc.help(message,uid,gid)
             elif true_startswith( message, '/笑话','/苏联笑话' ): 
                 fc.xiaohua(message,uid,gid)
-#            elif true_startswith( message, '/色图','/瑟图','/setu' ): 
-#                fc.setu(message,uid,gid)
+            elif true_startswith( message, '/色图','/瑟图','/setu' ): 
+                fc.setu(message,uid,gid)
             elif true_startswith( message, '/添加色图','/加入瑟图','/添加瑟图','/加入色图'): 
                 fc.add_setu(message,uid,gid)
             elif true_startswith( message, '/+bga' ): 
@@ -45,12 +45,12 @@ def keyword(message,uid,gid = None):
                 guess_number_five.guess_number(message,uid,gid)
             elif true_startswith( message, '/诗词' ,'/一次元'): 
                 fc.shici(message,uid,gid)
-#            elif true_startswith( message, '/二次元','/ecy' ): 
-#                ecy.ecy(message,uid,gid)
-#            elif true_startswith( message, '/三次元','/scy','/酸菜鱼' ): 
-#                scy.scy(message,uid,gid)
-#            elif true_startswith( message, '/车万','/touhou' ): 
-#                touhou.touhou(message,uid,gid)
+            elif true_startswith( message, '/二次元','/ecy' ,'/水煮鱼' ): 
+                ecy.ecy(message,uid,gid)
+            elif true_startswith( message, '/三次元','/scy','/酸菜鱼' ): 
+                scy.scy(message,uid,gid)
+            elif true_startswith( message, '/车万','/touhou' ): 
+                touhou.touhou(message,uid,gid)
             elif true_startswith( message, '/摸鱼','/moyu' ): 
                 moyu.moyu(message,uid,gid)
             else:

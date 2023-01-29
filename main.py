@@ -2,22 +2,26 @@
 from flask import Flask, request
 import api
 import api2
+import api_seasons
+import api_puzzle
 
 app = Flask(__name__)
 
 @app.route('/',methods=["POST"] )
 def post_data():
-	if request.get_json().get('message_type') == 'group' :
-		gid = request.get_json().get('group_id')
-		uid = request.get_json().get('sender').get('user_id')
-		message = request.get_json().get('raw_message')
-		if gid == 144744787:
-			api.keyword(message,uid,gid)
-		if gid == 530879511:
-			api.keyword(message,uid,gid)
-		if gid == 528343595:
-			api.keyword(message,uid,gid)
-	return 'OK'
+        if request.get_json().get('message_type') == 'group' :
+                gid = request.get_json().get('group_id')
+                uid = request.get_json().get('sender').get('user_id')
+                message = request.get_json().get('raw_message')
+                if gid == 144744787:
+                        api_seasons.keyword(message,uid,gid)
+                if gid == 530879511:
+                        api.keyword(message,uid,gid)
+                if gid == 528343595:
+                        api_puzzle.keyword(message,uid,gid)
+                else:
+                        api_puzzle.keyword(message,uid,gid)
+        return 'OK'
 
 if __name__ == '__main__':
-	app.run(debug=True,host='0.0.0.0',port=5701)
+        app.run(debug=True,host='0.0.0.0',port=5701)
