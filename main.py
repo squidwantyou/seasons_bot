@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 from flask import Flask, request
-import api
-import api2
 import api_seasons
 import api_puzzle
 
@@ -15,9 +13,9 @@ def post_data():
                 message = request.get_json().get('raw_message')
                 if gid == 144744787:
                         api_seasons.keyword(message,uid,gid)
-                if gid == 530879511:
-                        api.keyword(message,uid,gid)
-                if gid == 528343595:
+                elif gid == 530879511:
+                        api_puzzle.keyword(message,uid,gid)
+                elif gid == 528343595:
                         api_puzzle.keyword(message,uid,gid)
                 else:
                         api_puzzle.keyword(message,uid,gid)

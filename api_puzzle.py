@@ -10,6 +10,7 @@ import touhou
 import moyu
 import guess_color
 import other
+import zaoan
 
 def keyword(message,uid,gid = None):
     message = Message(message)
@@ -53,6 +54,8 @@ def keyword(message,uid,gid = None):
                 touhou.touhou(message,uid,gid)
             elif true_startswith( message, '/摸鱼','/moyu' ): 
                 moyu.moyu(message,uid,gid)
+            elif true_startswith( message, '/早安','/晚安' ): 
+                zaoan.zaoan(message,uid,gid)
             else:
                 other.other(message,uid,gid)
 

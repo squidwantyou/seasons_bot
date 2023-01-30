@@ -10,6 +10,7 @@ import touhou
 import moyu
 import guess_color
 import other
+import zaoan
 
 def keyword(message,uid,gid = None):
     message = Message(message)
@@ -21,8 +22,8 @@ def keyword(message,uid,gid = None):
                 fc.xiaohua(message,uid,gid)
 #            elif true_startswith( message, '/色图','/瑟图','/setu' ): 
 #                fc.setu(message,uid,gid)
-            elif true_startswith( message, '/添加色图','/加入瑟图','/添加瑟图','/加入色图'): 
-                fc.add_setu(message,uid,gid)
+#            elif true_startswith( message, '/添加色图','/加入瑟图','/添加瑟图','/加入色图'): 
+#                fc.add_setu(message,uid,gid)
             elif true_startswith( message, '/+bga' ): 
                 fc.addid(message,uid,gid)
             elif true_startswith( message, '/?bga' ): 
@@ -45,7 +46,7 @@ def keyword(message,uid,gid = None):
                 guess_number_five.guess_number(message,uid,gid)
             elif true_startswith( message, '/诗词' ,'/一次元'): 
                 fc.shici(message,uid,gid)
-#            elif true_startswith( message, '/二次元','/ecy' ): 
+#            elif true_startswith( message, '/二次元','/ecy' ,'/水煮鱼' ): 
 #                ecy.ecy(message,uid,gid)
 #            elif true_startswith( message, '/三次元','/scy','/酸菜鱼' ): 
 #                scy.scy(message,uid,gid)
@@ -53,6 +54,8 @@ def keyword(message,uid,gid = None):
 #                touhou.touhou(message,uid,gid)
             elif true_startswith( message, '/摸鱼','/moyu' ): 
                 moyu.moyu(message,uid,gid)
+            elif true_startswith( message, '/早安','/晚安' ): 
+                zaoan.zaoan(message,uid,gid)
             else:
                 other.other(message,uid,gid)
 
