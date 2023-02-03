@@ -4,7 +4,9 @@ import json
 import re
 import analysis
 
-# create table hello ( id int auto_increment, qq int, word varchar(255), time timestamp default current_timestamp, primary key(id) );
+# create table hello ( id int auto_increment, qq varchar(255), word varchar(255), time timestamp default current_timestamp, primary key(id) );
+
+TIME_CONDITION = 'time between addtime( if( hour(curtime())<=3 , curdate()-1, curdate() )  ,"4:0:0") and addtime( if( hour(curtime())<=3 , curdate(), curdate()+1 )  ,"4:0:0")'
 
 def login(uid):
     cmd = f"insert into hello ( qq, word ) values ( {uid} , 'morning' ) "
@@ -16,15 +18,16 @@ def logout(uid):
     pass
 
 def get_status(uid):
+    global TIME_CONDITION
     status = dict()
-    cmd = f"select * from hello where qq={uid} and word = 'morning' and date(time) = curdate()"
+    cmd = f"select * from hello where qq={uid} and word = 'morning' and {TIME_CONDITION}"
     results = analysis.source_mysql( cmd )
     status['zao'] =( len(results) >= 1 )
     try:
         status['zao_time'] =results[0][3]
     except:
         status['zao_time'] = None
-    cmd = f"select * from hello where qq={uid} and word = 'night' and date(time) = curdate()"
+    cmd = f"select * from hello where qq={uid} and word = 'night' and {TIME_CONDITION}"
     results = analysis.source_mysql( cmd )
     status['wan'] =( len(results) >= 1 )
     try:
@@ -34,9 +37,11 @@ def get_status(uid):
     return status
 
 def get_consecutive(uid):
+    global TIME_CONDITION
     N = 0
     while (True ):
-        cmd = f"select * from hello where qq={uid} and word = 'morning' and date(time) = curdate()-{N}"
+        tmp_condition = f'time between addtime( if( hour(curtime())<=3 , curdate()-1-{N} , curdate() - {N} )  ,"4:0:0") and addtime( if( hour(curtime())<=3 , curdate()-{N}, curdate()+1-{N} )  ,"4:0:0")'
+        cmd = f"select * from hello where qq={uid} and word = 'morning' and {tmp_condition}"
         results = analysis.source_mysql( cmd )
         if ( len(results) >= 1 ):
             N += 1
@@ -45,12 +50,12 @@ def get_consecutive(uid):
     return N
 
 def get_awaketime(uid):
-    cmd = f"select * from hello where qq={uid} and word = 'morning' and date(time) = curdate()"
+    cmd = f"select * from hello where qq={uid} and word = 'morning' and {TIME_CONDITION}"
     results = analysis.source_mysql( cmd )
     morning_time = results[0][3]
 
 
-    cmd = f"select * from hello where qq={uid} and word = 'night' and date(time) = curdate()"
+    cmd = f"select * from hello where qq={uid} and word = 'night' and {TIME_CONDITION}"
     results = analysis.source_mysql( cmd )
     night_time = results[0][3]
 
@@ -116,4 +121,6 @@ def zaoan(message,uid=0,gid=0):
     except Exception as e:
         print(e)
         analysis.send_msg("异常，这很异常",uid=uid,gid=gid)
+
+
 

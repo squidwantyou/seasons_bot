@@ -9,8 +9,10 @@ import scy
 import touhou
 import moyu
 import guess_color
+import guess_color_2
 import other
 import zaoan
+import delay
 
 def keyword(message,uid,gid = None):
     message = Message(message)
@@ -50,12 +52,14 @@ def keyword(message,uid,gid = None):
                 ecy.ecy(message,uid,gid)
             elif true_startswith( message, '/三次元','/scy','/酸菜鱼' ): 
                 scy.scy(message,uid,gid)
-            elif true_startswith( message, '/车万','/touhou' ): 
+            elif true_startswith( message, '/车万','/touhou','/松鼠鱼' ): 
                 touhou.touhou(message,uid,gid)
             elif true_startswith( message, '/摸鱼','/moyu' ): 
                 moyu.moyu(message,uid,gid)
             elif true_startswith( message, '/早安','/晚安' ): 
                 zaoan.zaoan(message,uid,gid)
+            elif true_startswith( message, '/提醒','/delay' ): 
+                delay.delay(message,uid,gid)
             else:
                 other.other(message,uid,gid)
 

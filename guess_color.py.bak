@@ -44,7 +44,7 @@ def create_all_queries():
         s.add(q)
     return s
 
-def make_puzzle(gid=None):
+def make_puzzle():
     global n_trials
     global L
     n_trials = 0
@@ -66,7 +66,7 @@ def make_puzzle(gid=None):
         candidates = truncate( candidates, trials, answer )
 
     log = log.strip()
-    cmd = f"INSERT INTO gnc ( answer,queries, status, qqgroup ) VALUES ( '{answer}', '{log}', 0, '{gid}' )"
+    cmd = f"INSERT INTO gnc ( answer,queries, status ) VALUES ( '{answer}', '{log}', 0 )"
     tmp = source_mysql(cmd)
     return
 
@@ -90,28 +90,23 @@ def analyze_query( answer, query ) :
     b = sum(b_count.values())
     return (a,b)
 
-def log_into_database(answer, log, gid, finished = 0):
-    cmd = "SELECT * FROM gnc   where qqgroup='{gid}' ORDER BY id DESC LIMIT 1;" 
+def log_into_database(answer, log, finished = 0):
+    cmd = "SELECT * FROM gnc  ORDER BY id DESC LIMIT 1;" 
     result = source_mysql(cmd)
     index = int(result[0][0])
     # print(f"UPDATE gnc SET queries='{log}',status={finished} WHERE id={index} ")
-    cmd = f"UPDATE gnc SET queries='{log}',status={finished} WHERE id={index} and qqgroup='{gid}' "
+    cmd = f"UPDATE gnc SET queries='{log}',status={finished} WHERE id={index} "
     result = source_mysql(cmd)
     return
 
-def fetch_last_puzzle(gid):
-    cmd = f"select * from gnc where qqgroup='{gid}' ORDER BY id DESC LIMIT 1;" 
+def fetch_last_puzzle():
+    cmd = "select * from gnc  ORDER BY id DESC LIMIT 1;" 
     result = source_mysql(cmd)
-    try:
-        return result[0]
-    except Exception as e:
-        print(e)
-        return [ 0,'','',1,None ]
+    return result[0]
 
-def check_finished(gid):
-    last_puzzle = fetch_last_puzzle(gid)
-    print(last_puzzle)
-    if int(last_puzzle[-2]) == 1:
+def check_finished():
+    last_puzzle = fetch_last_puzzle()
+    if int(last_puzzle[-1]) == 1:
         return True
     else:
         return False
@@ -130,10 +125,10 @@ def query_to_emoji(query):
         emoji = emoji + qtoe[i]
     return emoji
 
-def report_status(gid,uid=None):
+def report_status(uid=None,gid=None):
     global QQPC_LIMIT
     tmp  = 0
-    puzzle = fetch_last_puzzle(gid)
+    puzzle = fetch_last_puzzle()
     log,status = puzzle[2:4]
     trials = log.split()
     all_m = list()
@@ -162,40 +157,37 @@ def report_status(gid,uid=None):
     # print(m)
     return
 
-def finish_puzzle(gid):
-    try:
-        puzzle = fetch_last_puzzle(gid)
-        index = puzzle[0]
-        cmd = f'UPDATE gnc SET status=1 WHERE id={index}'
-        result = source_mysql(cmd)
-    except Exception as e:
-        print(e)
-        return
+def finish_puzzle():
+    puzzle = fetch_last_puzzle()
+    index = puzzle[0]
+    cmd = f'UPDATE gnc SET status=1 WHERE id={index}'
+    result = source_mysql(cmd)
+    return
 
 # 猜数字                
 def guess_color(message,uid,gid):
     global n_trials
     global L
     global default_L
-    color = ''
+    color = '8888'
     try:
         color = message.text.split()[1]
     except:
-        color = None
+        color = 'xxxx'
 
-    if color == None:
-        if check_finished(gid): # if finished
+    if color == 'xxxx':
+        if check_finished(): # if finished
             color = 'new'
         else:
-            report_status(gid)
+            report_status(gid=gid)
         
     if color == 'stop':
-        finish_puzzle(gid)
+        finish_puzzle()
         send_msg(gid =gid, m ="Thank you for playing.")
         return 
 
     if color == 'new':
-        finish_puzzle(gid)
+        finish_puzzle()
         try:
             user_L = int(message.text.split()[2])
         except:
@@ -205,17 +197,17 @@ def guess_color(message,uid,gid):
         L = user_L
 
     if color == 'cheat':
-        finish_puzzle(gid)
-        tmp,answer,log,status ,qqgroup= fetch_last_puzzle(gid)
+        finish_puzzle()
+        tmp,answer,log,status = fetch_last_puzzle()
         emoji = query_to_emoji(answer)
         send_msg(gid=gid,m=f'正确答案是：{emoji}, 放弃就是这种感觉，必可活用于下一次')
         return
 
-    if check_finished(gid): # if finished
+    if check_finished(): # if finished
         # make new puzzle # log into database
-        make_puzzle(gid)
+        make_puzzle()
         # report current status
-        report_status(gid)
+        report_status(gid=gid)
     else: # if not finished
         try:
             try:
@@ -224,7 +216,7 @@ def guess_color(message,uid,gid):
                 send_msg(gid=gid,m=f"你的颜色很美丽，而我只有红蓝黑白") 
                 return
             print("Q",query,color)
-            tmp,answer,log,status ,qqgroup = fetch_last_puzzle(gid)
+            tmp,answer,log,status = fetch_last_puzzle()
             # query = message.text.split()[1]
             try:
                 A,B = analyze_query(answer,query) # analysis new query
@@ -240,19 +232,18 @@ def guess_color(message,uid,gid):
                 # if len(log.split()) >= MAX_TRIAL - 1 :# if max trial
                     # Send End status, give answer
                     send_msg(gid=gid,m=f"Reach trial times limit. Stop.\nThe Answer is {answer}") 
-                    finish_puzzle(gid) # finish current puzzle
+                    finish_puzzle() # finish current puzzle
             else: # if right
                 emoji = query_to_emoji(query)
                 send_msg(gid=gid,m=f"您TQL，没错，就是 {emoji}") 
                 #log_into_database(answer, log+f" {query}:{A}:{B}", finished=1)# log into database
                 #report_status(gid=gid) # report current status
                 # finish current puzzle
-                finish_puzzle(gid)
+                finish_puzzle()
         except Exception as e :
             print(e)
-            finish_puzzle(gid)
+            finish_puzzle()
             error(gid=gid)
-
     pass
 
 #print(analyze_query(sys.argv[1],sys.argv[2]))

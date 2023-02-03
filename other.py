@@ -32,6 +32,31 @@ def other(message,uid=0,gid=0):
     try:
         items = message.text.split()
         if len(items) == 1:
+            if items[0] == '/我要入群':
+                reply = '''三国版杀单挑版631105718
+冰火版杀混将版390192333
+冰火魔兽地图版572739859
+召唤师战争版杀1093402862
+截码战版杀105519002
+行动代号版杀105519002
+猜灯谜105519002
+猜人物105519002
+狼人真言版杀105519002
+冰火版杀三国版726626754
+三国卡牌地图版
+AA版杀792928487
+足球经理版杀695306632
+宋金战争版杀526356041
+电厂版杀696424142
+GH版杀
+深入绝地版杀813706399
+日本战国地图版542073634
+战争之匣版杀
+马尼拉版杀199137991
+冰火3V3单挑943076369'''
+                analysis.send_msg(reply,uid=uid,gid=gid)
+                return
+                
             anwser = find_answer(items[0])
             if anwser:
                 analysis.send_msg(anwser,uid=uid,gid=gid)

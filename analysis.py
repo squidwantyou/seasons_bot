@@ -3,12 +3,22 @@ import json
 from urllib.parse import parse_qs
 import pymysql
 import requests
+# import api_puzzle
 
 def send_msg(m,uid=0,gid=0):
-    data = {'group_id': gid  , 'message':m} 
-    url = 'http://0.0.0.0:5700/send_group_msg'
-    print(">>>>> send_msg:",data, url)
-    requests.post( url=url, data=data )
+    if not m.startswith("/"):
+        data = {'group_id': gid  , 'message':m} 
+        url = 'http://0.0.0.0:5700/send_group_msg'
+        print(">>>>> send_msg:",data, url)
+        requests.post( url=url, data=data )
+    else:
+        data = { 'message_type':'group',
+                'group_id':gid,
+                'sender': { 'user_id' : uid },
+                'raw_message': m }
+        url = 'http://0.0.0.0:5701'
+        print(">>>>> send_msg (fake message) :",data, url)
+        requests.post( url=url, json=data )
 
 def true_startswith(string, *query):
         patt = re.compile("\[CQ:.*?\]")
