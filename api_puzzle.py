@@ -13,6 +13,8 @@ import guess_color_2
 import other
 import zaoan
 import delay
+import choose
+import echo
 
 def keyword(message,uid,gid = None):
     message = Message(message)
@@ -60,6 +62,10 @@ def keyword(message,uid,gid = None):
                 zaoan.zaoan(message,uid,gid)
             elif true_startswith( message, '/提醒','/delay' ): 
                 delay.delay(message,uid,gid)
+            elif true_startswith( message, '/选择','/choose','/choice' ): 
+                choose.choose(message,uid,gid)
+            elif true_startswith( message, '/echo','/say', '/说' ): 
+                echo.echo(message,uid,gid)
             else:
                 other.other(message,uid,gid)
 

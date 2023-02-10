@@ -5,10 +5,15 @@ import sys,os
 MAX_TRIAL=3
 PRE_TRIAL=7
 QQPC_LIMIT=30
-L = 5
 n_trials = 0
-K = 4
+L = 5
 default_L = 5
+K = 4
+default_K = 4
+KMAX = 6
+
+def get_all_colors():
+    return "红蓝黑白绿紫"[:K]
 
 def error(gid = 0):
     send_msg(gid=gid,m="呜呜，又出错了")
@@ -117,14 +122,15 @@ def check_finished(gid):
         return False
 
 def color_to_query(color):
-    ctoq = { "红":'0' , "蓝":'1' , "黑":'2' , "白":'3' }
+    ctoq = { "红":'0' , "蓝":'1' , "黑":'2' , "白":'3', "绿":'4', "紫":'5',
+             '🔴':'0' , '🔵':'1' , '⚫':'2' , '⚪':'3', "💚":'4', "💜":'5' }
     query = ''
     for i in color:
         query = query + ctoq[i]
     return query
 
 def query_to_emoji(query):
-    qtoe = { "0":'🔴' , "1":'🔵' , "2":'⚫' , "3":'⚪' }
+    qtoe = { "0":'🔴' , "1":'🔵' , "2":'⚫' , "3":'⚪', "4":"💚", "5":"💜" }
     emoji = ''
     for i in query:
         emoji = emoji + qtoe[i]
@@ -153,7 +159,7 @@ def report_status(gid,uid=None):
     all_m.append(cm)
 
     if status == 0:
-        all_m[-1] += "输入如 /guess 红蓝黑白 继续猜，或者/guess stop 停止猜数"
+        all_m[-1] += f"输入如 /guess {get_all_colors()} 继续猜，或者/guess stop 停止猜数"
     else:
         all_m[-1] += "正确，TQL"
 
@@ -177,6 +183,9 @@ def guess_color(message,uid,gid):
     global n_trials
     global L
     global default_L
+    global K
+    global default_K
+    global KMAX
     color = ''
     try:
         color = message.text.split()[1]
@@ -200,9 +209,16 @@ def guess_color(message,uid,gid):
             user_L = int(message.text.split()[2])
         except:
             user_L = default_L
-        if user_L >= 10:
+        try:
+            user_K = int(message.text.split()[3])
+        except:
+            user_K = default_K
+
+        if user_K ** user_L >= 500000 or user_K > KMAX or user_L < 2 or user_K < 2:
             user_L = default_L
+            user_K = default_K
         L = user_L
+        K = user_K
 
     if color == 'cheat':
         finish_puzzle(gid)
@@ -221,7 +237,7 @@ def guess_color(message,uid,gid):
             try:
                 query = color_to_query(color)
             except:
-                send_msg(gid=gid,m=f"你的颜色很美丽，而我只有红蓝黑白") 
+                send_msg(gid=gid,m=f"你的颜色很美丽，而我只有{get_all_colors()}") 
                 return
             print("Q",query,color)
             tmp,answer,log,status ,qqgroup = fetch_last_puzzle(gid)
