@@ -1,1 +1,2 @@
-nohup python main.py > main.log&
+conda activate base
+nohup python3 main.py > main.log&

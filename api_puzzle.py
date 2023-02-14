@@ -1,7 +1,6 @@
 import requests
 import function as fc
 from analysis import *
-#from guess_number import guess_number
 from guess_number_2 import guess_number
 import guess_number_five 
 import ecy
@@ -9,7 +8,6 @@ import scy
 import touhou
 import moyu
 import guess_color
-import guess_color_2
 import other
 import zaoan
 import delay

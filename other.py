@@ -65,8 +65,8 @@ GH版杀
         else:
             key = items[0]
             value = message.text.lstrip(key).lstrip()
-            # if value.startswith('/'):
-            if False:
+            if value.startswith('/'):
+            # if False:
                 pass
             else:
                 record_answer(key,value)
