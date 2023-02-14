@@ -13,6 +13,7 @@ import zaoan
 import delay
 import choose
 import echo
+import fsort
 
 def keyword(message,uid,gid = None):
     message = Message(message)
@@ -62,6 +63,8 @@ def keyword(message,uid,gid = None):
                 delay.delay(message,uid,gid)
             elif true_startswith( message, '/选择','/choose','/choice' ): 
                 choose.choose(message,uid,gid)
+            elif true_startswith( message, '/排序','/sort'): 
+                fsort.fsort(message,uid,gid)
             elif true_startswith( message, '/echo','/say', '/说' ): 
                 echo.echo(message,uid,gid)
             else:
