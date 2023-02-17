@@ -14,6 +14,8 @@ import delay
 import choose
 import echo
 import fsort
+import douyingirl
+import loop
 
 def keyword(message,uid,gid = None):
     message = Message(message)
@@ -65,12 +67,16 @@ def keyword(message,uid,gid = None):
                 zaoan.zaoan(message,uid,gid)
             elif true_startswith( message, '/提醒','/delay' ): 
                 delay.delay(message,uid,gid)
+            elif true_startswith( message, '/循环','/loop' ): 
+                loop.loop(message,uid,gid)
             elif true_startswith( message, '/选择','/choose','/choice' ): 
                 choose.choose(message,uid,gid)
             elif true_startswith( message, '/排序','/sort'): 
                 fsort.fsort(message,uid,gid)
             elif true_startswith( message, '/夸我','/kk', '/kw' ):  # from weilan
                 fc.kk(message,uid,gid)
+            elif true_startswith( message, '/小姐姐','/四次元', '/girl' ):  
+                douyingirl.douyingirl(message,uid,gid)
             elif true_startswith( message, '/echo','/say', '/说' ): 
                 echo.echo(message,uid,gid)
             else:
