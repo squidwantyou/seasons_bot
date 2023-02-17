@@ -162,7 +162,7 @@ def guess_number(message,uid,gid):
     pass
 
 #print(analyze_query(sys.argv[1],sys.argv[2]))
-make_puzzle()
+# make_puzzle()
 # report_status(gid=0)
 
 
