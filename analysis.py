@@ -3,7 +3,14 @@ import json
 from urllib.parse import parse_qs
 import pymysql
 import requests
+import base64
 # import api_puzzle
+
+def b64e(s):
+    return base64.b64encode(s.encode()).decode()
+
+def b64d(s):
+    return base64.b64decode(s).decode()
 
 def send_msg(m,uid=0,gid=0):
     if not m.startswith("/"):

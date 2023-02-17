@@ -312,6 +312,31 @@ def shici(message,uid,gid):
     text = json.loads(data.content)["content"]
     analysis.send_msg( text, uid=uid,gid=gid )
     
+def tuweiqinghua(message,uid,gid):
+    data = requests.get("https://api.vvhan.com/api/love")
+    text = data.content.decode('utf-8')
+    analysis.send_msg( text, uid=uid,gid=gid )
 
+def qinghua(message,uid,gid):
+    data = requests.get("https://api.lovelive.tools/api/SweetNothings")
+    text = data.content.decode('utf-8')
+    analysis.send_msg( text, uid=uid,gid=gid )
 
+def kk(message,uid,gid):
+    try:
+        results = analysis.source_mysql(f"select * from kk order by rand() limit 1")
+        text = analysis.b64d( results[0][1] )
+        analysis.send_msg( text, uid=uid,gid=gid )
+    except:
+        analysis.send_msg( "程序沉醉于您的美貌,都停止运行了", uid=uid,gid=gid )
+
+def gushi(message,uid,gid):
+    try:
+        shangju = message.text.split()[1]
+        query = analysis.b64e(shangju)
+        results = analysis.source_mysql(f"select xiaju from pnbs where shangju='{query}' limit 1")
+        text = analysis.b64d( results[0][0] )
+        analysis.send_msg( text, uid=uid,gid=gid )
+    except:
+        analysis.send_msg( "古籍浩如烟海,小触手Hold不住", uid=uid,gid=gid )
 

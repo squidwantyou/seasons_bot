@@ -142,7 +142,8 @@ def guess_number(message,uid,gid):
                 n_trials += 1
                 # log_into_database(answer, log, finished=0)# log into database
                 report_status(gid=gid) # report current status
-                send_msg(gid=gid,m=f"{query} 不对哦，请再想想") 
+                if not query == 'xxxx':
+                    send_msg(gid=gid,m=f"{query} 不对哦，请再想想") 
                 if n_trials >= MAX_TRIAL:
                 # if len(log.split()) >= MAX_TRIAL - 1 :# if max trial
                     # Send End status, give answer

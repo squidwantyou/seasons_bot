@@ -12,7 +12,8 @@ def post_data():
                 uid = request.get_json().get('sender').get('user_id')
                 message = request.get_json().get('raw_message')
                 if gid == 144744787:
-                        api_seasons.keyword(message,uid,gid)
+                        pass
+                        # api_seasons.keyword(message,uid,gid)
                 elif gid == 530879511:
                         api_puzzle.keyword(message,uid,gid)
                 elif gid == 528343595:

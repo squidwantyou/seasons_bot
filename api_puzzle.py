@@ -49,6 +49,10 @@ def keyword(message,uid,gid = None):
                 guess_number_five.guess_number(message,uid,gid)
             elif true_startswith( message, '/诗词' ,'/一次元'): 
                 fc.shici(message,uid,gid)
+            elif true_startswith( message, '/土味' ,'/twqh','/土味情话'): 
+                fc.tuweiqinghua(message,uid,gid)
+            elif true_startswith( message, '/情话' ,'/qh'): 
+                fc.tuweiqinghua(message,uid,gid)
             elif true_startswith( message, '/二次元','/ecy' ,'/水煮鱼' ): 
                 ecy.ecy(message,uid,gid)
             elif true_startswith( message, '/三次元','/scy','/酸菜鱼' ): 
@@ -65,6 +69,8 @@ def keyword(message,uid,gid = None):
                 choose.choose(message,uid,gid)
             elif true_startswith( message, '/排序','/sort'): 
                 fsort.fsort(message,uid,gid)
+            elif true_startswith( message, '/夸我','/kk', '/kw' ):  # from weilan
+                fc.kk(message,uid,gid)
             elif true_startswith( message, '/echo','/say', '/说' ): 
                 echo.echo(message,uid,gid)
             else:
