@@ -114,7 +114,19 @@ class Board:
             ['h',11,9], ['h',14,9], ['h',15,11], ['h',9,    12], ['h',13,14],
             ]
         self.board4 = rotate_wall( board4,180 )
-        self.all_boards = [ self.board1,self.board2,self.board3,self.board4 ]
+        self.board5 =[ ['v',1,1 ], ['v',1,6 ], ['v',4,2 ], ['v',4,7], ['v',5,0],
+                  ['h',1,0], ['h',0,3], ['h',2,6], ['h',4,2], ['h',5,6],
+            ]
+        self.board6 =[ ['v',0,2 ], ['v',3,6 ], ['v',4,0 ], ['v',4,4], ['v',6,1],
+                  ['h',1,1], ['h',0,4], ['h',3,5], ['h',5,4], ['h',6,1],
+            ]
+        self.board7 =[ ['v',1,2 ], ['v',3,1 ], ['v',3,6 ], ['v',4,0], ['v',5,5], ['v',7,3],
+                  ['h',0,4], ['h',1,2], ['h',3,0], ['h',4,5], ['h',7,3],['h',6,5],
+            ]
+        self.board8 =[ ['v',1,1 ], ['v',1,6 ], ['v',4,6 ], ['v',5,0], ['v',6,3], 
+                  ['h',0,4], ['h',1,6], ['h',2,0], ['h',5,6], ['h',6,2],
+            ]
+        self.all_boards = [ self.board1,self.board2,self.board3,self.board4,self.board5, self.board6,self.board7,self.board8 ]
         self.generate_target()
         self.generate_board()
         self.choose_target()
@@ -125,21 +137,29 @@ class Board:
         target2 = [ ['b',2,5 ],['g',4,2],['r',5,7],['y',6,1] ]
         target3 = [ ['b',6,3 ],['g',2,1],['r',1,4],['y',3,6] ]
         target4 = [ ['b',6,2 ],['g',1,5],['r',2,1],['y',4,6] ]
-        self.all_targets = [target1 , target2 , target3 , target4]
+        target5 = [ ['b',4,2 ],['g',2,6],['r',1,1],['y',5,7] ]
+        target6 = [ ['b',3,6 ],['g',6,1],['r',5,4],['y',1,2] ]
+        target7 = [ ['b',6,5 ],['g',3,1],['r',1,2],['y',4,6],['x',7,3 ] ]
+        target8 = [ ['b',6,3 ],['g',2,1],['r',1,4],['y',3,6] ]
+        self.all_targets = [target1 , target2 , target3 , target4, target5, target6,target7,target8 ]
 
     def generate_board(self):
         tmp = self.all_boards # [self.board1,self.board2,self.board3,self.board4]
         tmp_tar = self.all_targets
-        index = list( range(len(tmp)) )
+        #index = list( range(len(tmp)) )
+        index = list( range( len(tmp) ) )
         rd.shuffle( index )
+        print("Generate_board_rand_state:",index )
+
+        all_boards = [0,0,0,0]
+        all_targets = [0,0,0,0]
         
         for i in range(4):
-            tmp[ index[i] ] = rotate_wall( tmp[ index[i] ],90*i )
-            tmp_tar[ index[i] ] = rotate_loc( tmp_tar[ index[i] ], 90*i )
+            all_boards[ i ] = rotate_wall( tmp[ index[i] ],90*i )
+            all_targets[ i ] = rotate_loc( tmp_tar[ index[i] ], 90*i )
 
-        self.current_board = tmp[0] + tmp[1] + tmp[2] + tmp[3]
-        self.current_targets = tmp_tar[0] + tmp_tar[1] + tmp_tar[2] + tmp_tar[3]
-
+        self.current_board = all_boards[0] + all_boards[1] + all_boards[2] + all_boards[3]
+        self.current_targets = all_targets[0] + all_targets[1] + all_targets[2] + all_targets[3]
 
         self.obs = list()
         self.obs.append( (int(N/2),int(N/2)) )
