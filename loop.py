@@ -6,14 +6,14 @@ import analysis
 def loop(message,uid=0,gid=0):
     try:
         items = message.text.split()
-        delay = int(items[1])
-        time = int(items[2])
-        interval = int(items[3])
-        if time >= 3600*24 or time >=100 or interval < 60 :
+        time = int(items[1])
+        interval = int(items[2])
+        if time >10 or time * interval > 3600 :
             raise Exception
 
-        text = '\'' + " ".join(items[4:]) + '\''
-        p  = subprocess.Popen(" ".join( ["nohup", "./send_loop_message.py",str(uid),str(gid), str(delay),str(time),str(interval), text ]) , shell=True )
+    
+        text = '\'' + " ".join(items[3:]) + '\''
+        p  = subprocess.Popen(" ".join( ["nohup", "./send_loop_message.py",str(uid),str(gid),str(time),str(interval), text ]) , shell=True )
         stdout, stderr = p.communicate()
 
     except Exception as e:

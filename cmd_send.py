@@ -4,7 +4,7 @@ import random as rd
 import requests
 import json
 
-gid = 105519002
+gid = 528343595
 
 url = 'http://0.0.0.0:5700/get_msg'
 data = {'message_id':-1776849735} 

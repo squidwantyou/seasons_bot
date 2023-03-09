@@ -16,17 +16,20 @@ import echo
 import fsort
 import douyingirl
 import loop
+import fother
+import pzjqr
 
 def keyword(message,uid,gid = None):
     message = Message(message)
     if True:
         if true_startswith( message, '/' ): 
             if true_startswith( message, '/help','/帮助' ): 
-                fc.help(message,uid,gid)
+                pass
+                 #fc.help(message,uid,gid)
             elif true_startswith( message, '/笑话','/苏联笑话' ): 
                 fc.xiaohua(message,uid,gid)
-            elif true_startswith( message, '/色图','/瑟图','/setu' ): 
-                fc.setu(message,uid,gid)
+#            elif true_startswith( message, '/色图','/瑟图','/setu' ): 
+#                fc.setu(message,uid,gid)
             elif true_startswith( message, '/添加色图','/加入瑟图','/添加瑟图','/加入色图'): 
                 fc.add_setu(message,uid,gid)
             elif true_startswith( message, '/+bga' ): 
@@ -79,6 +82,10 @@ def keyword(message,uid,gid = None):
                 douyingirl.douyingirl(message,uid,gid)
             elif true_startswith( message, '/echo','/say', '/说' ): 
                 echo.echo(message,uid,gid)
+            elif true_startswith( message, '/pz' ): 
+                pzjqr.pzjqr(message,uid,gid)
+            elif true_startswith( message, '/-' ): 
+                fother.other(message,uid,gid)
             else:
                 other.other(message,uid,gid)
 
