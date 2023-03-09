@@ -114,6 +114,7 @@ class Board:
             ['h',11,9], ['h',14,9], ['h',15,11], ['h',9,    12], ['h',13,14],
             ]
         self.board4 = rotate_wall( board4,180 )
+        self.all_boards = [ self.board1,self.board2,self.board3,self.board4 ]
         self.generate_target()
         self.generate_board()
         self.choose_target()
@@ -127,9 +128,9 @@ class Board:
         self.all_targets = [target1 , target2 , target3 , target4]
 
     def generate_board(self):
-        tmp = [self.board1,self.board2,self.board3,self.board4]
+        tmp = self.all_boards # [self.board1,self.board2,self.board3,self.board4]
         tmp_tar = self.all_targets
-        index = list(range(4))
+        index = list( range(len(tmp)) )
         rd.shuffle( index )
         
         for i in range(4):
@@ -442,8 +443,8 @@ def finish_puzzle(gid):
         return
     pass
 
-def update_puzzle(gid,steps ,path,qq="0"):
-    puzzle = fetch_last_puzzle(gid)
+def update_puzzle(gid,steps ,path,qq="0",i_d = None):
+    puzzle = fetch_last_puzzle(gid,i_d = i_d )
     index , blob ,status ,old_steps = puzzle[0:4]
     if old_steps <= steps:
         return
@@ -474,12 +475,12 @@ def fetch_last_puzzle(gid,i_d = None):
     except Exception as e:
         return [ 0,'',1,9999,'xx',None ]
 
-def load_last_board(gid):
+def load_last_board(gid,i_d = None):
     board = None
     try:
         global FILENAME
         #id int auto_increment, puzzle VARBINARY(1000), status int, steps int, path varchar(255), qqgroup varchar(255) , primary key(id));
-        puzzle = fetch_last_puzzle(gid)
+        puzzle = fetch_last_puzzle(gid,i_d = i_d)
         blob ,status ,steps = puzzle[1:4]
         missing_padding = len(blob) % 4
         if missing_padding != 0:
@@ -526,21 +527,48 @@ def pzjqr( message, uid, gid ):
         analysis.send_msg(gid =gid, m ="Thank you for playing.")
         return 
 
-    if path == 'new':
+    elif path == 'new':    # make new puzzle
         finish_puzzle(gid)
         make_puzzle(gid)
         report_status(gid)
+
     elif check_finished(gid): # if finished
         make_puzzle(gid)
         report_status(gid)
 
-    elif path.isdigit():
+    elif path == 'help':
+        m = "[CQ:image,file=pzjqr_help.png]"
+        analysis.send_msg(m,uid=uid,gid=gid)
+
+    elif path.isdigit():  # if query historic puzzle
         try:
             report_status(gid,i_d = int(path) )
         except:
             analysis.send_msg("O_O 找不到捏",uid=uid,gid=gid)
 
-    else: # if not finished
+    elif path.split()[0] == 'update':
+        try:
+            i_d = int(path.split()[1])
+            path = " ".join( path.split()[2:] )
+            path = sanitize_path(path)
+            board = load_last_board(gid,i_d = i_d )
+            steps = sum( [ len(x) -1 for x in path.split() ] )
+            board.conduct_path(path)
+            if board.check_goal():
+                update_puzzle(gid,steps,path,qq=uid, i_d = i_d )
+                analysis.send_msg(f"您的新解是:{path}",uid=uid,gid=gid)
+                report_status(gid,i_d = i_d )
+            else:
+                draw_state(board,f"data/images/tmp_{gid}_{FILENAME}")
+                send_msg(f"[CQ:image,file=tmp_{gid}_{FILENAME}]",gid=gid)
+                analysis.send_msg("不太正确哦 =_=",uid=uid,gid=gid)
+            pass
+        except:
+            analysis.send_msg("并不容易呢~",uid=uid,gid=gid)
+            
+        pass
+
+    else: # conduct path
         try:
             # load board
             board = load_last_board(gid)
@@ -566,8 +594,6 @@ def pzjqr( message, uid, gid ):
             print(e)
             sys.stdout.flush()
             analysis.send_msg("X=_=X 小触手看不懂这个耶",uid=uid,gid=gid)
-
-
 
 #m = analysis.Message("")
 #m.text = '/pz new'
