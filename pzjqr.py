@@ -10,6 +10,7 @@ import numpy as np
 from analysis import source_mysql,send_msg
 import analysis
 
+
 FILENAME='pzjqr.png'
 N = 16
 margin = 0
@@ -140,7 +141,7 @@ class Board:
         target5 = [ ['b',4,2 ],['g',2,6],['r',1,1],['y',5,7] ]
         target6 = [ ['b',3,6 ],['g',6,1],['r',5,4],['y',1,2] ]
         target7 = [ ['b',6,5 ],['g',3,1],['r',1,2],['y',4,6],['x',7,3 ] ]
-        target8 = [ ['b',6,3 ],['g',2,1],['r',1,4],['y',3,6] ]
+        target8 = [ ['b',6,3 ],['g',2,1],['r',1,6],['y',5,6] ]
         self.all_targets = [target1 , target2 , target3 , target4, target5, target6,target7,target8 ]
 
     def generate_board(self):
@@ -211,6 +212,66 @@ class Board:
                         self.init_robots.append( ( i+'o',x,y) )
                         break
         self.current_robots = self.init_robots[:]
+
+    def dump_to_txt(self):
+        tmp = ''
+        for s,a,b in self.current_board:
+            tmp += f"{s} {a} {b} "
+        tmp += '\n'
+        s,a,b = self.target
+        tmp += f"{s.upper()} {a} {b} "
+        tmp += '\n'
+        for s,a,b in self.init_robots:
+            tmp += f"{s[0]} {a} {b} "
+            
+        return tmp
+
+    def load_txt(self, txt):
+        global N
+        self.current_board = list()
+        self.target = None
+        self.init_robots = list()
+        lines = txt.split("\n")
+
+        print(">>>> Load txt:")
+        print(txt)
+        print(">>>> Loaded txt:")
+        sys.stdout.flush()
+        items = lines[0].split()
+        i = 0
+        while True:
+            if i == len(items):
+                break
+            self.current_board.append( [ items[i], int(items[i+1]), int(items[i+2]) ] )
+            i += 3
+        
+        items = lines[1].split()
+        self.target = [ items[0].lower(), int(items[1]), int(items[2]) ]
+
+        i = 0
+        items = lines[2].split()
+        while True:
+            if i == len(items):
+                break
+            self.init_robots.append( ( items[i]+'o', int(items[i+1]), int(items[i+2]) ) )
+            i += 3
+
+        self.current_robots = self.init_robots[:] 
+
+        self.obs = list()
+        self.obs.append( (int(N/2),int(N/2)) )
+        self.obs.append( (int(N/2-1),int(N/2)) )
+        self.obs.append( (int(N/2),int(N/2-1)) )
+        self.obs.append( (int(N/2-1),int(N/2-1)) )
+
+        self.obs_wall = np.zeros( [N,N,N,N] )
+        for i,x,y in self.current_board:
+            if i=='v':
+                self.obs_wall[x,y,x+1,y] = 1
+                self.obs_wall[x+1,y,x,y] = 1
+            if i=='h':
+                self.obs_wall[x,y,x,y+1] = 1
+                self.obs_wall[x,y+1,x,y] = 1
 
     def conduct_path(self,path):
         for p in path.split():
@@ -442,15 +503,25 @@ def report_status(gid,i_d = None):
     #id int auto_increment, puzzle VARBINARY(1000), status int, steps int, path varchar(255), qqgroup varchar(255) , primary key(id));
     puzzle = fetch_last_puzzle(gid,i_d = i_d)
     
-    i_d,blob ,status ,steps ,path,group,qq = puzzle[0:7]
+    i_d,blob ,status ,steps ,path,group,qq,least_steps = puzzle[0:8]
     missing_padding = len(blob) % 4
     if missing_padding != 0:
         blob += '='* (4 - missing_padding)
-    board = pickle.loads( base64.b64decode(blob) )
+    if len(blob) >10000:
+        board = pickle.loads( base64.b64decode(blob) )
+    else:
+        txt = pickle.loads( base64.b64decode(blob) )
+        board = Board()
+        board.load_txt(txt)
+        
     title = f"#{i_d}"
     xlabel = f"Known best solution is {steps} steps.\n{path} BY @{qq}"
     draw_state(board,f"data/images/{gid}_{FILENAME}",title= title, xlabel=xlabel)
-    send_msg(f"[CQ:image,file={gid}_{FILENAME}]",gid=gid)
+    if not steps == least_steps:
+        best_str = ''
+    else:
+        best_str = '本题已经达到了理论最优解'
+    send_msg(f"[CQ:image,file={gid}_{FILENAME}]{best_str}",gid=gid)
     return
 
 def finish_puzzle(gid):
@@ -473,14 +544,35 @@ def update_puzzle(gid,steps ,path,qq="0",i_d = None):
         result = source_mysql(cmd)
     return
 
-def make_puzzle(gid):
-    board = Board()
-    blob = pickle.dumps(board)
-    blob = base64.b64encode(blob).decode()
-    sys.stdout.flush()
-    #id int auto_increment, puzzle VARBINARY(1000), status int, steps int, path varchar(255), qqgroup varchar(255) , primary key(id));
-    cmd = f"INSERT INTO pzjqr ( puzzle ,status , steps , path , qqgroup,solver ) VALUES ( '{blob}' , 0, 9999, 'xx', '{gid}' ,'Cthulhu')"
-    tmp = source_mysql(cmd)
+def get_least_steps(txt):
+    n = 0
+    return 0
+    try:
+        with open("solver.in",'w') as ofp:
+            ofp.write(txt)
+        a = os.popen("./solver_pzjqr").read()
+        n = int(a.split('\n')[-2].split()[-2])
+    except:
+        return 0
+    return n
+
+def make_puzzle(gid, board = None):
+    while True:
+        if board == None:
+            board = Board()
+        else:
+            pass
+        txt = board.dump_to_txt()
+        least_steps = get_least_steps(txt)
+        if 0< least_steps <= 3:
+            continue
+        else:
+            blob = pickle.dumps(txt)
+            blob = base64.b64encode(blob).decode()
+            sys.stdout.flush()
+            cmd = f"INSERT INTO pzjqr ( puzzle ,status , steps , path , qqgroup,solver,least_steps ) VALUES ( '{blob}' , 0, 9999, 'xx', '{gid}' ,'Cthulhu', {least_steps} )"
+            tmp = source_mysql(cmd)
+            break
     return
 
 def fetch_last_puzzle(gid,i_d = None):
@@ -488,7 +580,7 @@ def fetch_last_puzzle(gid,i_d = None):
         cmd = f"select * from pzjqr where qqgroup='{gid}' ORDER BY id DESC LIMIT 1;" 
     else:
         i_d = int(i_d)
-        cmd = f"select * from pzjqr where qqgroup='{gid}' and id={i_d};"
+        cmd = f"select * from pzjqr where id={i_d};"
     result = source_mysql(cmd)
     try:
         return result[0]
@@ -505,7 +597,12 @@ def load_last_board(gid,i_d = None):
         missing_padding = len(blob) % 4
         if missing_padding != 0:
             blob += '='* (4 - missing_padding)
-        board = pickle.loads( base64.b64decode(blob) )
+        if len(blob) < 10000:
+            txt = pickle.loads( base64.b64decode(blob) )
+            board = Board()
+            board.load_txt(txt)
+        else:
+            board = pickle.loads( base64.b64decode(blob) )
     except Exception as e:
         send_msg("O_O",uid=0,gid=gid)
     return board
@@ -526,8 +623,6 @@ def sanitize_path(path):
         newpath = newpath + " " + r
     return newpath
 
-
-# create table pzjqr ( id int auto_increment, puzzle VARBINARY(1000), status int, qqgroup varchar(255) , primary key(id));
 def pzjqr( message, uid, gid ):
     path = ''
     try:
@@ -535,14 +630,14 @@ def pzjqr( message, uid, gid ):
     except:
         path = ''
 
-    if path == '':
+    if path == '':    # no arguments, report 
         if check_finished(gid): # if finished
             path = 'new'
         else:
             report_status(gid)
             return
-        
-    if path == 'stop':
+         
+    if path == 'stop': # end current puzzle
         finish_puzzle(gid)
         analysis.send_msg(gid =gid, m ="Thank you for playing.")
         return 
@@ -556,7 +651,7 @@ def pzjqr( message, uid, gid ):
         make_puzzle(gid)
         report_status(gid)
 
-    elif path == 'help':
+    elif path == 'help':  # show help message
         m = "[CQ:image,file=pzjqr_help.png]"
         analysis.send_msg(m,uid=uid,gid=gid)
 
@@ -566,7 +661,7 @@ def pzjqr( message, uid, gid ):
         except:
             analysis.send_msg("O_O 找不到捏",uid=uid,gid=gid)
 
-    elif path.split()[0] == 'update':
+    elif path.split()[0] == 'update': # update historic puzzle
         try:
             i_d = int(path.split()[1])
             path = " ".join( path.split()[2:] )
@@ -587,6 +682,29 @@ def pzjqr( message, uid, gid ):
             analysis.send_msg("并不容易呢~",uid=uid,gid=gid)
             
         pass
+
+    elif path.split()[0] == 'data': # require historic puzzle data
+        try:
+            i_d = int(path.split()[1])
+            board = load_last_board(gid,i_d = i_d )
+            tmp = board.dump_to_txt()
+            analysis.send_msg(tmp,uid=uid,gid=gid)
+        except:
+            analysis.send_msg("在下也不好说是哪里不对，但总之是出错了",uid=uid,gid=gid)
+
+    elif path.split()[0] == 'load': # user define level
+        try:
+            reply_msg = analysis.get_reply(message,uid=uid,gid=gid)
+            txt = reply_msg.text
+            board = Board()
+            board.load_txt(txt)
+            finish_puzzle(gid)
+            make_puzzle(gid,board=board)
+            report_status(gid)
+        except Exception as e :
+            print(e)
+            sys.stdout.flush()
+            analysis.send_msg("可能，也许，大概是有一点点故障吧...",uid=uid,gid=gid)
 
     else: # conduct path
         try:
@@ -614,8 +732,4 @@ def pzjqr( message, uid, gid ):
             print(e)
             sys.stdout.flush()
             analysis.send_msg("X=_=X 小触手看不懂这个耶",uid=uid,gid=gid)
-
-#m = analysis.Message("")
-#m.text = '/pz new'
-#pzjqr( m, 0,0)
 

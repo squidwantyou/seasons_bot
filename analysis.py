@@ -72,6 +72,22 @@ def source_mysql(cmd):
 
     return results
 
+def get_reply(message,uid,gid):
+    reply_cq = ''
+    for cq in message.cqs:
+        if cq.type == 'reply':
+            reply_cq = cq
+            break
+    assert reply_cq != ''
+    reply_id = reply_cq.content['id'][0]
+    url = 'http://0.0.0.0:5700/get_msg'
+    data = {'message_id':int(reply_id)} 
+    res = requests.post( url=url, data=data )
+    reply_msg = json.loads( res.content )['data']['message'] 
+    reply_msg = Message(reply_msg)
+    return reply_msg
+    
+
 # m = '/+bga [CQ:at,qq=937404959] zyyzxyz'
 # m = Message(m)
 # print(m.cqs[0].type)
