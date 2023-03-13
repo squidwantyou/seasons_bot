@@ -20,4 +20,3 @@ def scy(message,uid=0,gid=0):
     except Exception as e:
         print(e)
 
-scy('',gid=0)

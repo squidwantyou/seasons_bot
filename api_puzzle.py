@@ -18,14 +18,14 @@ import douyingirl
 import loop
 import fother
 import pzjqr
+import fhelp
 
 def keyword(message,uid,gid = None):
     message = Message(message)
     if True:
         if true_startswith( message, '/' ): 
-            if true_startswith( message, '/help','/帮助' ): 
-                pass
-                 #fc.help(message,uid,gid)
+            if true_startswith( message, '/help','/list','/帮助' ): 
+                fhelp.fhelp(message,uid=uid,gid=gid)
             elif true_startswith( message, '/笑话','/苏联笑话' ): 
                 fc.xiaohua(message,uid,gid)
 #            elif true_startswith( message, '/色图','/瑟图','/setu' ): 
@@ -78,11 +78,11 @@ def keyword(message,uid,gid = None):
                 fsort.fsort(message,uid,gid)
             elif true_startswith( message, '/夸我','/kk', '/kw' ):  # from weilan
                 fc.kk(message,uid,gid)
-            elif true_startswith( message, '/小姐姐','/四次元', '/girl' ):  
+            elif true_startswith( message, '/小姐姐','/四次元', '/girl','/臭鳜鱼' ):  
                 douyingirl.douyingirl(message,uid,gid)
             elif true_startswith( message, '/echo','/say', '/说' ): 
                 echo.echo(message,uid,gid)
-            elif true_startswith( message, '/pz' ): 
+            elif true_startswith( message, '/pz','/碰撞' ): 
                 pzjqr.pzjqr(message,uid,gid)
             elif true_startswith( message, '/-' ): 
                 fother.other(message,uid,gid)

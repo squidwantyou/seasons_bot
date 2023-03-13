@@ -6,7 +6,8 @@ import analysis
 
 # create table hello ( id int auto_increment, qq varchar(255), word varchar(255), time timestamp default current_timestamp, primary key(id) );
 
-TIME_CONDITION = 'time between addtime( if( hour(curtime())<=3 , curdate()-1, curdate() )  ,"4:0:0") and addtime( if( hour(curtime())<=3 , curdate(), curdate()+1 )  ,"4:0:0")'
+# TIME_CONDITION = 'time between addtime( if( hour(curtime())<=3 , curdate()-1, curdate() )  ,"4:0:0") and addtime( if( hour(curtime())<=3 , curdate(), curdate()+1 )  ,"4:0:0")'
+TIME_CONDITION = 'date(time) = curdate() '
 
 def login(uid):
     cmd = f"insert into hello ( qq, word ) values ( {uid} , 'morning' ) "
@@ -20,14 +21,14 @@ def logout(uid):
 def get_status(uid):
     global TIME_CONDITION
     status = dict()
-    cmd = f"select * from hello where qq={uid} and word = 'morning' and {TIME_CONDITION}"
+    cmd = f"select * from hello where qq='{uid}' and word = 'morning' and {TIME_CONDITION}"
     results = analysis.source_mysql( cmd )
     status['zao'] =( len(results) >= 1 )
     try:
         status['zao_time'] =results[0][3]
     except:
         status['zao_time'] = None
-    cmd = f"select * from hello where qq={uid} and word = 'night' and {TIME_CONDITION}"
+    cmd = f"select * from hello where qq='{uid}' and word = 'night' and {TIME_CONDITION}"
     results = analysis.source_mysql( cmd )
     status['wan'] =( len(results) >= 1 )
     try:
@@ -50,12 +51,12 @@ def get_consecutive(uid):
     return N
 
 def get_awaketime(uid):
-    cmd = f"select * from hello where qq={uid} and word = 'morning' and {TIME_CONDITION}"
+    cmd = f"select * from hello where qq='{uid}' and word = 'morning' and {TIME_CONDITION}"
     results = analysis.source_mysql( cmd )
     morning_time = results[0][3]
 
 
-    cmd = f"select * from hello where qq={uid} and word = 'night' and {TIME_CONDITION}"
+    cmd = f"select * from hello where qq='{uid}' and word = 'night' and {TIME_CONDITION}"
     results = analysis.source_mysql( cmd )
     night_time = results[0][3]
 
