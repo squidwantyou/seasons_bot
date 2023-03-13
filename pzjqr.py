@@ -4,6 +4,7 @@ import sys,os
 import matplotlib.pyplot as plt
 from matplotlib.collections import LineCollection
 import matplotlib.patches as mpatches
+import matplotlib
 import random as rd
 import pickle
 import numpy as np
@@ -14,125 +15,33 @@ import analysis
 FILENAME='pzjqr.png'
 N = 16
 margin = 0
-# rd.seed(2)
+rd.seed(2)
+MAX_STEPS = 100
 
-def make_board(ax):
-    global N
-    global margin
-    # add boarder line
-    linelist  = [   [(-0.5,-0.5),(-0.5,N-0.5)],
-            [(-0.5,-0.5),(N-0.5,-0.5)],
-            [(-0.5,N-0.5),(N-0.5,N-0.5)],
-            [(N-0.5,-0.5),(N-0.5,N-0.5)] ]
-    x = [ x[0] for x in linelist ]
-    y = [ x[1] for x in linelist ]
-    line_segs = LineCollection( linelist,lw=5,color='black',alpha = 0.7 ) 
-    ax.add_collection( line_segs )
-
-    # add inner line
-    linelist = list()
-    for i in range(N-1):
-        linelist.append( ((0.5+i,-0.5),(0.5+i,N-0.5)) ) # v
-        linelist.append( ((-0.5,0.5+i),(N-0.5,0.5+i)) ) # h
-
-    line_segs = LineCollection( linelist,lw=2,color='black',alpha = 0.3 ) 
-    ax.add_collection( line_segs )
-
-    return
-
-def test(ax):
-    poly = mpatches.RegularPolygon( (1,1),5,radius=0.4,color='r',alpha = 0.3)
-    poly1 = mpatches.RegularPolygon( (2,2),5,radius=0.4,color='b',alpha = 0.3)
-    poly2 = mpatches.RegularPolygon( (3,3),5,radius=0.4,color='g',alpha = 0.3)
-    poly3 = mpatches.RegularPolygon( (4,4),5,radius=0.4,color='y',alpha = 0.3)
-    poly4 = mpatches.RegularPolygon( (0,0),5,radius=0.4,color='pink',alpha = 0.3)
-    ax.add_artist( poly )
-    ax.add_artist( poly1)
-    ax.add_artist( poly2)
-    ax.add_artist( poly3)
-    ax.add_artist( poly4)
-
-def init():
-    plt.clf()
-    fig,ax = plt.subplots(figsize = (8,8))
-
-    ax.set_xlim( (-0.5-margin, N-0.5+margin) )
-    ax.set_ylim( (-0.5-margin, N-0.5+margin) )
-    ax.axis('off')
-
-    return fig,ax
-
-def draw_wall(ax,walls,lw=8, color='#A84448',alpha = 0.7):
-    for t,x,y in walls:
-        if t == 'h':
-            left = (x-0.5,y+0.5)
-            right = (x+0.5,y+0.5)
-        elif t == 'v':
-            left = (x+0.5,y-0.5)
-            right = (x+0.5,y+0.5)
-        linelist  = [[left,right],]
-        line_segs = LineCollection( linelist,lw=lw,color=color,alpha = alpha) 
-        ax.add_collection( line_segs )
-
-def draw_token(ax,locs,alpha = 0.7):
-    for t,x,y in locs:
-        if t in ['b','r','g','y','x']:
-            if t != 'x':
-                poly = mpatches.RegularPolygon( (x,y),3,radius=0.4,color=t,alpha = 0.5)
-            else:
-                poly = mpatches.RegularPolygon( (x,y),3,radius=0.4,color='black',alpha = 0.5)
-            ax.add_artist( poly )
-        if t in ['ro','bo','go','yo']:
-            poly = mpatches.Circle( (x,y),radius=0.4,color=t[0],alpha = 0.9)
-            ax.add_artist( poly )
-
-def draw_center(ax):
-    global N
-    draw_wall(ax,[['h',7,6]],color = 'black',lw=5 )
-    draw_wall(ax,[['h',8,6]],color = 'black',lw=5 )
-    draw_wall(ax,[['h',7,8]],color = 'black',lw=5 )
-    draw_wall(ax,[['h',8,8]],color = 'black',lw=5 )
-    draw_wall(ax,[['v',6,7]],color = 'black',lw=5 )
-    draw_wall(ax,[['v',6,8]],color = 'black',lw=5 )
-    draw_wall(ax,[['v',8,7]],color = 'black',lw=5 )
-    draw_wall(ax,[['v',8,8]],color = 'black',lw=5 )
-    
 class Board:
     def __init__(self):
-        self.board1 =[ ['v',6,0  ], ['v',2,1  ], ['v',5,2  ], ['v',3,5  ], ['v',1,6  ],
-            ['v',5,7 ], ['h',3, 1], ['h',5, 2], ['h',0, 3], ['h',4, 4],
-            ['h',1, 5], ['h',5, 7],
-            ]
-        board2 =[ ['v',11,0 ],  ['v',9,2  ], ['v',12,4 ], ['v',8,5  ], ['v',14,6 ],
-            ['h',10,2], ['h',13,3], ['h',15,4], ['h',8, 5], ['h',14,5],
-            ]
-        self.board2 = rotate_wall( board2,90 )
-        board3 =[ ['v',2,9  ], ['v',6,12 ], ['v',1,13 ], ['v',3,14 ], ['v',1,15],
-            ['h',3, 8], ['h',0, 9], ['h',6, 11], ['h',1,    13], ['h',4,    14],
-            ]
-        self.board3 = rotate_wall( board3,270 )
-        board4 =[ ['v',11,9 ], ['v',13,10 ], ['v',9,13 ], ['v',12,14], ['v',11,15],
-            ['h',11,9], ['h',14,9], ['h',15,11], ['h',9,    12], ['h',13,14],
-            ]
-        self.board4 = rotate_wall( board4,180 )
-        self.board5 =[ ['v',1,1 ], ['v',1,6 ], ['v',4,2 ], ['v',4,7], ['v',5,0],
-                  ['h',1,0], ['h',0,3], ['h',2,6], ['h',4,2], ['h',5,6],
-            ]
-        self.board6 =[ ['v',0,2 ], ['v',3,6 ], ['v',4,0 ], ['v',4,4], ['v',6,1],
-                  ['h',1,1], ['h',0,4], ['h',3,5], ['h',5,4], ['h',6,1],
-            ]
-        self.board7 =[ ['v',1,2 ], ['v',3,1 ], ['v',3,6 ], ['v',4,0], ['v',5,5], ['v',7,3],
-                  ['h',0,4], ['h',1,2], ['h',3,0], ['h',4,5], ['h',7,3],['h',6,5],
-            ]
-        self.board8 =[ ['v',1,1 ], ['v',1,6 ], ['v',4,6 ], ['v',5,0], ['v',6,3], 
-                  ['h',0,4], ['h',1,6], ['h',2,0], ['h',5,6], ['h',6,2],
-            ]
-        self.all_boards = [ self.board1,self.board2,self.board3,self.board4,self.board5, self.board6,self.board7,self.board8 ]
         self.generate_target()
         self.generate_board()
         self.choose_target()
+        self.generate_obs()
         self.generate_robots()
+        self.generate_vortex()
     
+    def generate_vortex(self):
+        self.vortex = list()
+        all_empty = self.get_empty_spaces()
+        while True:
+            x1,y1 = rd.choice( all_empty )
+            x2,y2 = rd.choice( all_empty )
+            if x2==x1:
+                continue
+            if y2==y1:
+                continue
+            
+            self.vortex.append( (('i',x1,y1),('o',x2,y2)) )
+            self.vortex.append( (('i',x2,y2),('o',x1,y1)) )
+            break
+
     def generate_target(self):
         target1 = [ ['b',1,6 ],['x',5,7],['g',4,5],['r',5,2],['y',3,1] ]
         target2 = [ ['b',2,5 ],['g',4,2],['r',5,7],['y',6,1] ]
@@ -145,9 +54,37 @@ class Board:
         self.all_targets = [target1 , target2 , target3 , target4, target5, target6,target7,target8 ]
 
     def generate_board(self):
-        tmp = self.all_boards # [self.board1,self.board2,self.board3,self.board4]
+        board1 =[ ['v',6,0  ], ['v',2,1  ], ['v',5,2  ], ['v',3,5  ], ['v',1,6  ],
+            ['v',5,7 ], ['h',3, 1], ['h',5, 2], ['h',0, 3], ['h',4, 4],
+            ['h',1, 5], ['h',5, 7],
+            ]
+        board2 =[ ['v',11,0 ],  ['v',9,2  ], ['v',12,4 ], ['v',8,5  ], ['v',14,6 ],
+            ['h',10,2], ['h',13,3], ['h',15,4], ['h',8, 5], ['h',14,5],
+            ]
+        board2 = rotate_wall( board2,90 )
+        board3 =[ ['v',2,9  ], ['v',6,12 ], ['v',1,13 ], ['v',3,14 ], ['v',1,15],
+            ['h',3, 8], ['h',0, 9], ['h',6, 11], ['h',1,    13], ['h',4,    14],
+            ]
+        board3 = rotate_wall( board3,270 )
+        board4 =[ ['v',11,9 ], ['v',13,10 ], ['v',9,13 ], ['v',12,14], ['v',11,15],
+            ['h',11,9], ['h',14,9], ['h',15,11], ['h',9,    12], ['h',13,14],
+            ]
+        board4 = rotate_wall( board4,180 )
+        board5 =[ ['v',1,1 ], ['v',1,6 ], ['v',4,2 ], ['v',4,7], ['v',5,0],
+                  ['h',1,0], ['h',0,3], ['h',2,6], ['h',4,2], ['h',5,6],
+            ]
+        board6 =[ ['v',0,2 ], ['v',3,6 ], ['v',4,0 ], ['v',4,4], ['v',6,1],
+                  ['h',1,1], ['h',0,4], ['h',3,5], ['h',5,4], ['h',6,1],
+            ]
+        board7 =[ ['v',1,2 ], ['v',3,1 ], ['v',3,6 ], ['v',4,0], ['v',5,5], ['v',7,3],
+                  ['h',0,4], ['h',1,2], ['h',3,0], ['h',4,5], ['h',7,3],['h',6,5],
+            ]
+        board8 =[ ['v',1,1 ], ['v',1,6 ], ['v',4,6 ], ['v',5,0], ['v',6,3], 
+                  ['h',0,4], ['h',1,6], ['h',2,0], ['h',5,6], ['h',6,2],
+            ]
+        self.all_boards = [ board1,board2,board3,board4,board5, board6,board7,board8 ]
+        tmp = self.all_boards 
         tmp_tar = self.all_targets
-        #index = list( range(len(tmp)) )
         index = list( range( len(tmp) ) )
         rd.shuffle( index )
         print("Generate_board_rand_state:",index )
@@ -162,6 +99,8 @@ class Board:
         self.current_board = all_boards[0] + all_boards[1] + all_boards[2] + all_boards[3]
         self.current_targets = all_targets[0] + all_targets[1] + all_targets[2] + all_targets[3]
 
+    def generate_obs(self):
+        global N
         self.obs = list()
         self.obs.append( (int(N/2),int(N/2)) )
         self.obs.append( (int(N/2-1),int(N/2)) )
@@ -177,25 +116,6 @@ class Board:
                 self.obs_wall[x,y,x,y+1] = 1
                 self.obs_wall[x,y+1,x,y] = 1
         return 
-
-    def choose_target(self):
-        self.target = rd.choice( self.current_targets )
-    
-    def check_goal(self):
-        c,rx,ry = self.target
-        r = c + 'o' 
-        if c != 'x':
-            for i,x,y in self.current_robots:
-                if r==i and x == rx and y == ry :
-                    return True
-        else:
-            for i,x,y in self.current_robots:
-                if x == rx and y == ry :
-                    return True
-        return False
-
-    def reset(self):
-        self.current_robots = self.init_robots[:]
 
     def generate_robots(self):
         self.init_robots = list()
@@ -213,16 +133,74 @@ class Board:
                         break
         self.current_robots = self.init_robots[:]
 
+    def choose_target(self):
+        self.target = rd.choice( self.current_targets )
+
+    def get_empty_spaces(self,padding=True):
+        alls = list()
+        if padding:
+            for x in range(1,N-1):
+                for y in range(1,N-1):
+                    if self.is_empty(x,y): 
+                        if self.is_empty(x-1,y):
+                            if self.is_empty(x+1,y):
+                                if self.is_empty(x,y-1):
+                                    if self.is_empty(x,y+1):
+                                        alls.append( (x,y) )
+        return alls
+        
+    
+    def is_empty(self,xr,yr):
+        for x,y in self.obs:
+            if x==xr and y == yr :
+                return False
+        for i,x,y in [self.target,]:
+            if x==xr and y == yr :
+                return False
+        for i,x,y in self.current_robots:
+            if x==xr and y == yr :
+                return False
+        return True
+
+    def check_goal(self):
+        c,rx,ry = self.target
+        r = c + 'o' 
+        if c != 'x':
+            for i,x,y in self.current_robots:
+                if r==i and x == rx and y == ry :
+                    return True
+        else:
+            for i,x,y in self.current_robots:
+                if x == rx and y == ry :
+                    return True
+        return False
+
+    def reset(self):
+        self.current_robots = self.init_robots[:]
+
     def dump_to_txt(self):
         tmp = ''
         for s,a,b in self.current_board:
             tmp += f"{s} {a} {b} "
         tmp += '\n'
+
         s,a,b = self.target
+
         tmp += f"{s.upper()} {a} {b} "
         tmp += '\n'
+
         for s,a,b in self.init_robots:
             tmp += f"{s[0]} {a} {b} "
+
+        tmp += '\n'
+        try:
+            for part1,part2 in self.vortex:
+                i,x1,y1 = part1
+                o,x2,y2 = part2
+                tmp += f"V {x1} {y1} {x2} {y2} "
+        except:
+            pass
+
             
         return tmp
 
@@ -231,6 +209,7 @@ class Board:
         self.current_board = list()
         self.target = None
         self.init_robots = list()
+        self.vortex = list()
         lines = txt.split("\n")
 
         print(">>>> Load txt:")
@@ -255,8 +234,24 @@ class Board:
                 break
             self.init_robots.append( ( items[i]+'o', int(items[i+1]), int(items[i+2]) ) )
             i += 3
-
         self.current_robots = self.init_robots[:] 
+
+        i = 0
+        try:
+            items = lines[3].split()
+            while True:
+                if i == len(items):
+                    break
+                self.vortex.append( 
+                    ( ('i',int(items[i+1]),int(items[i+2]) ) , ('o',int(items[i+3]),int(items[i+4]) ) ) 
+                )
+        #        self.vortex.append( 
+        #            ( ('i',int(items[i+3]),int(items[i+4]) ) , ('o',int(items[i+1]),int(items[i+2]) ) ) 
+        #        )
+                i += 5
+        except:
+            print("vortex 1")
+            pass
 
         self.obs = list()
         self.obs.append( (int(N/2),int(N/2)) )
@@ -281,12 +276,17 @@ class Board:
         pass
 
     def move_once(self,r,d):
+        global MAX_STEPS
+        i = 0 
         while True:
             result = self.move_one_step(r,d)# try to move one step
             if result:
                 self.update_robot(r,result)
             else:
                 break
+            i += 1
+            if i >= MAX_STEPS:
+                raise Exception
     
     def update_robot(self,r,result):
         for i,loc in enumerate(self.current_robots):
@@ -316,6 +316,7 @@ class Board:
         elif d == 'r':
             shadow_loc = [x+1,y]
 
+
         # check outboard
         if not 0<=shadow_loc[0]<N :
             return False
@@ -339,6 +340,14 @@ class Board:
         check_obs = None
         if self.obs_wall[x,y,shadow_loc[0],shadow_loc[1]]:
             return False
+
+        # check vortex
+        if hasattr(self,'vortex'):
+            for vin,vout in self.vortex:
+                if vin[1] == shadow_loc[0] and vin[2] == shadow_loc[1]:
+                    shadow_loc = ( vout[1],vout[2] )
+                    # return new loc
+                    return shadow_loc
 
         return shadow_loc
 
@@ -430,7 +439,130 @@ class Board:
                     new_states.append(new_s)
 
         return self.find_path_flood( start = start + 1, states = new_states, limit = limit )
-                        
+
+def make_board(ax):
+    global N
+    global margin
+    # add boarder line
+    linelist  = [   [(-0.5,-0.5),(-0.5,N-0.5)],
+            [(-0.5,-0.5),(N-0.5,-0.5)],
+            [(-0.5,N-0.5),(N-0.5,N-0.5)],
+            [(N-0.5,-0.5),(N-0.5,N-0.5)] ]
+    x = [ x[0] for x in linelist ]
+    y = [ x[1] for x in linelist ]
+    line_segs = LineCollection( linelist,lw=5,color='black',alpha = 0.7 ) 
+    ax.add_collection( line_segs )
+
+    # add inner line
+    linelist = list()
+    for i in range(N-1):
+        linelist.append( ((0.5+i,-0.5),(0.5+i,N-0.5)) ) # v
+        linelist.append( ((-0.5,0.5+i),(N-0.5,0.5+i)) ) # h
+
+    line_segs = LineCollection( linelist,lw=2,color='black',alpha = 0.3 ) 
+    ax.add_collection( line_segs )
+
+    return
+
+def test(ax):
+    poly = mpatches.RegularPolygon( (1,1),5,radius=0.4,color='r',alpha = 0.3)
+    poly1 = mpatches.RegularPolygon( (2,2),5,radius=0.4,color='b',alpha = 0.3)
+    poly2 = mpatches.RegularPolygon( (3,3),5,radius=0.4,color='g',alpha = 0.3)
+    poly3 = mpatches.RegularPolygon( (4,4),5,radius=0.4,color='y',alpha = 0.3)
+    poly4 = mpatches.RegularPolygon( (0,0),5,radius=0.4,color='pink',alpha = 0.3)
+    ax.add_artist( poly )
+    ax.add_artist( poly1)
+    ax.add_artist( poly2)
+    ax.add_artist( poly3)
+    ax.add_artist( poly4)
+
+def draw_init():
+    plt.clf()
+    fig,ax = plt.subplots(figsize = (8,8))
+
+    ax.set_xlim( (-0.5-margin, N-0.5+margin) )
+    ax.set_ylim( (-0.5-margin, N-0.5+margin) )
+    ax.axis('off')
+
+    return fig,ax
+
+def draw_wall(ax,walls,lw=8, color='#A84448',alpha = 0.7):
+    for t,x,y in walls:
+        if t == 'h':
+            left = (x-0.5,y+0.5)
+            right = (x+0.5,y+0.5)
+        elif t == 'v':
+            left = (x+0.5,y-0.5)
+            right = (x+0.5,y+0.5)
+        linelist  = [[left,right],]
+        line_segs = LineCollection( linelist,lw=lw,color=color,alpha = alpha) 
+        ax.add_collection( line_segs )
+
+def draw_token(ax,locs,alpha = 0.7):
+    for t,x,y in locs:
+        if t in ['b','r','g','y','x']:
+            if t != 'x':
+                poly = mpatches.RegularPolygon( (x,y),3,radius=0.4,color=t,alpha = 0.5)
+            else:
+                poly = mpatches.RegularPolygon( (x,y),3,radius=0.4,color='black',alpha = 0.5)
+            ax.add_artist( poly )
+        if t in ['ro','bo','go','yo']:
+            poly = mpatches.Circle( (x,y),radius=0.4,color=t[0],alpha = 0.9)
+            ax.add_artist( poly )
+
+        if t == 'o':
+            n = 30
+            scale = 0.4
+            z = np.linspace(0,n, 3 * n)
+
+            nx = scale * z /n * np.sin(z) + x
+            ny = scale * z /n * np.cos(z) + y 
+
+
+            segments = np.stack( [nx[1:],ny[1:],nx[:-1],ny[:-1]], axis = 1).reshape(-1,2,2)
+            norm = plt.Normalize( 0, 3*n)
+            colors = ['r',]*5+['b',]*5+['g',]*5 + ['y',]*5
+
+            # lc = LineCollection( segments, cmap = 'viridis',norm = norm )
+            lc = LineCollection( segments, colors = colors,lw=0.5 )
+            
+            ax.add_collection(lc)
+        
+
+def draw_center(ax):
+    global N
+    hn = int(N/2)
+    draw_wall(ax,[['h',hn-1,hn-2]],color = 'black',lw=5 )
+    draw_wall(ax,[['h',hn,hn-2]],color = 'black',lw=5 )
+    draw_wall(ax,[['h',hn-1,hn]],color = 'black',lw=5 )
+    draw_wall(ax,[['h',hn,hn]],color = 'black',lw=5 )
+    draw_wall(ax,[['v',hn-2,hn-1]],color = 'black',lw=5 )
+    draw_wall(ax,[['v',hn-2,hn]],color = 'black',lw=5 )
+    draw_wall(ax,[['v',hn,hn-1]],color = 'black',lw=5 )
+    draw_wall(ax,[['v',hn,hn]],color = 'black',lw=5 )
+    
+def draw_state(board,outfile = 'tmp.png',title="",xlabel = '',fontproperties = None ):
+    global N 
+    fig,ax = draw_init()
+    make_board(ax)
+    draw_center(ax)
+    draw_wall(ax, board.current_board ) 
+    draw_token(ax, [board.target,] )
+    draw_token(ax, board.current_robots )
+    
+    try:
+        for vin,vout in board.vortex:
+            draw_token(ax, [['o',vin[1],vin[2]],] )
+    except Exception as e:
+        print(e)
+        print("vortex 2")
+        pass
+
+    ax.set_title(title,fontsize=30)
+    myfont = matplotlib.font_manager.FontProperties(fname='fonts/msyh.ttf')
+    ax.text( N/2,-1,xlabel,horizontalalignment='center',verticalalignment='top',fontsize=20, fontproperties = myfont)
+    plt.savefig(outfile)
+
 def rotate_wall( walls, angle ) :
     boardx = list()
     # rotate 180:
@@ -476,18 +608,6 @@ def rotate_loc( locs, angle ) :
         return locs
     return nlocs
 
-def draw_state(board,outfile = 'tmp.png',title="",xlabel = '' ):
-    global N 
-    fig,ax = init()
-    make_board(ax)
-    draw_center(ax)
-    draw_wall(ax, board.current_board ) 
-    draw_token(ax, [board.target,] )
-    draw_token(ax, board.current_robots )
-    ax.set_title(title,fontsize=30)
-    ax.text( N/2,-1,xlabel,horizontalalignment='center',verticalalignment='top',fontsize=20)
-    plt.savefig(outfile)
-
 def check_finished(gid):
     try:
         last_puzzle = fetch_last_puzzle(gid)
@@ -515,7 +635,8 @@ def report_status(gid,i_d = None):
         board.load_txt(txt)
         
     title = f"#{i_d}"
-    xlabel = f"Known best solution is {steps} steps.\n{path} BY @{qq}"
+    nickname = analysis.get_nick_name(message=None,gid=gid,uid =qq)
+    xlabel = f"当前最优解是 {steps} 步.\n{path} BY @{nickname}"
     draw_state(board,f"data/images/{gid}_{FILENAME}",title= title, xlabel=xlabel)
     if not steps == least_steps:
         best_str = ''
@@ -540,7 +661,7 @@ def update_puzzle(gid,steps ,path,qq="0",i_d = None):
     if old_steps <= steps:
         return
     else:
-        cmd = f"UPDATE pzjqr SET steps={steps},path='{path}',solver='{qq}' WHERE id={index} and qqgroup='{gid}' "
+        cmd = f"UPDATE pzjqr SET steps={steps},path='{path}',solver='{qq}' WHERE id={index}"
         result = source_mysql(cmd)
     return
 

@@ -86,6 +86,14 @@ def get_reply(message,uid,gid):
     reply_msg = json.loads( res.content )['data']['message'] 
     reply_msg = Message(reply_msg)
     return reply_msg
+
+def get_nick_name(message,gid,uid):
+    url = 'http://0.0.0.0:5700/get_group_member_info'
+    data = {'group_id':int(gid), 'user_id':int(uid) } 
+    res = requests.post( url=url, data=data )
+    reply_msg = json.loads( res.content )['data']['nickname'] 
+    return reply_msg
+       
     
 
 # m = '/+bga [CQ:at,qq=937404959] zyyzxyz'
