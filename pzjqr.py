@@ -11,12 +11,12 @@ import numpy as np
 from analysis import source_mysql,send_msg
 import analysis
 
-
 FILENAME='pzjqr.png'
 N = 16
 margin = 0
-rd.seed(2)
+# rd.seed(2)
 MAX_STEPS = 100
+N_targets = 2
 
 class Board:
     def __init__(self):
@@ -120,11 +120,15 @@ class Board:
     def generate_robots(self):
         self.init_robots = list()
         known = set()
+        target_locs = list()
+        for i,x,y in self.targets:
+            target_locs.append( (x,y) )
+
         for i in 'r','b','g','y':
             while True:
                 x = rd.randrange(0,N)
                 y = rd.randrange(0,N)
-                if (x,y) not in self.obs:
+                if (x,y) not in self.obs and (x,y) not in target_locs:
                 #     self.obs.append( (x,y) )
                 #     break
                     if (x,y) not in known:
@@ -134,7 +138,24 @@ class Board:
         self.current_robots = self.init_robots[:]
 
     def choose_target(self):
+        global N_targets
         self.target = rd.choice( self.current_targets )
+        self.targets = list()
+
+        known_t = list()
+        i = 0
+        while True:
+            tmptarget = rd.choice( self.current_targets )
+            if tmptarget[0] in known_t:
+                continue
+            else:
+                known_t.append( tmptarget[0] )
+                self.targets.append( tmptarget )
+                i += 1
+            if i == N_targets:
+                break
+
+        # self.targets = rd.sample( self.current_targets, N_targets )
 
     def get_empty_spaces(self,padding=True):
         alls = list()
@@ -154,7 +175,8 @@ class Board:
         for x,y in self.obs:
             if x==xr and y == yr :
                 return False
-        for i,x,y in [self.target,]:
+        #for i,x,y in [self.target,]:
+        for i,x,y in self.targets:
             if x==xr and y == yr :
                 return False
         for i,x,y in self.current_robots:
@@ -163,17 +185,27 @@ class Board:
         return True
 
     def check_goal(self):
-        c,rx,ry = self.target
-        r = c + 'o' 
-        if c != 'x':
-            for i,x,y in self.current_robots:
-                if r==i and x == rx and y == ry :
-                    return True
+        N_targets = len(self.targets)
+        goal = [0,] * N_targets
+        tmpi = 0
+        for c,rx,ry in self.targets:
+            r = c + 'o' 
+            if c != 'x':
+                for i,x,y in self.current_robots:
+                    if r==i and x == rx and y == ry :
+                        goal[tmpi] = 1
+                        break
+            else:
+                for i,x,y in self.current_robots:
+                    if x == rx and y == ry :
+                        goal[tmpi] = 1
+                        break
+            tmpi += 1
+
+        if sum(goal) >= N_targets:
+            return True
         else:
-            for i,x,y in self.current_robots:
-                if x == rx and y == ry :
-                    return True
-        return False
+            return False
 
     def reset(self):
         self.current_robots = self.init_robots[:]
@@ -184,9 +216,8 @@ class Board:
             tmp += f"{s} {a} {b} "
         tmp += '\n'
 
-        s,a,b = self.target
-
-        tmp += f"{s.upper()} {a} {b} "
+        for s,a,b in self.targets:
+            tmp += f"{s.upper()} {a} {b} "
         tmp += '\n'
 
         for s,a,b in self.init_robots:
@@ -208,6 +239,7 @@ class Board:
         global N
         self.current_board = list()
         self.target = None
+        self.targets = list()
         self.init_robots = list()
         self.vortex = list()
         lines = txt.split("\n")
@@ -225,7 +257,12 @@ class Board:
             i += 3
         
         items = lines[1].split()
-        self.target = [ items[0].lower(), int(items[1]), int(items[2]) ]
+        i = 0
+        while True:
+            if i == len(items):
+                break
+            self.targets.append(  ( items[i].lower(), int(items[i+1]), int(items[i+2]) ) )
+            i += 3
 
         i = 0
         items = lines[2].split()
@@ -499,6 +536,8 @@ def draw_wall(ax,walls,lw=8, color='#A84448',alpha = 0.7):
         ax.add_collection( line_segs )
 
 def draw_token(ax,locs,alpha = 0.7):
+    print("locs",locs)
+    sys.stdout.flush()
     for t,x,y in locs:
         if t in ['b','r','g','y','x']:
             if t != 'x':
@@ -547,7 +586,9 @@ def draw_state(board,outfile = 'tmp.png',title="",xlabel = '',fontproperties = N
     make_board(ax)
     draw_center(ax)
     draw_wall(ax, board.current_board ) 
-    draw_token(ax, [board.target,] )
+    print("targets:",board.targets)
+    sys.stdout.flush()
+    draw_token(ax, board.targets )
     draw_token(ax, board.current_robots )
     
     try:
