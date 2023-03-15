@@ -19,6 +19,10 @@ import loop
 import fother
 import pzjqr
 import fhelp
+import cat
+import dog
+import say9
+import gstone
 
 def keyword(message,uid,gid = None):
     message = Message(message)
@@ -80,10 +84,18 @@ def keyword(message,uid,gid = None):
                 fc.kk(message,uid,gid)
             elif true_startswith( message, '/小姐姐','/四次元', '/girl','/臭鳜鱼' ):  
                 douyingirl.douyingirl(message,uid,gid)
+            elif true_startswith( message, '/猫猫','/cat', '/miao','/喵' ):  
+                cat.cat(message,uid,gid)
+            elif true_startswith( message, '/dog' ):  
+                dog.dog(message,uid,gid)
             elif true_startswith( message, '/echo','/say', '/说' ): 
                 echo.echo(message,uid,gid)
+            elif true_startswith( message, '/9say' ): 
+                say9.say9(message,uid,gid)
             elif true_startswith( message, '/pz','/碰撞' ): 
                 pzjqr.pzjqr(message,uid,gid)
+            elif true_startswith( message, '/gstone'): 
+                gstone.gstone(message,uid,gid)
             elif true_startswith( message, '/-' ): 
                 fother.other(message,uid,gid)
             else:

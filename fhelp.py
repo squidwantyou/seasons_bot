@@ -31,6 +31,9 @@ def fhelp(message,uid=0,gid=0):
         [ '/小姐姐','/四次元', '/girl'],
         [ '/echo','/say', '/说' ],
         [ '/pz','/碰撞' ],
+        [ '/猫猫','/cat', '/miao','/喵' ],  
+        [ '/dog', ],  
+        [ '/9say', ],  
         [ '/-' ], ]
         m = '所有口令：\n'
         for l in command_list:
