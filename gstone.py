@@ -6,8 +6,6 @@ import analysis
 from bs4 import BeautifulSoup
 import sys
 
-
-
 def gstone(message,uid=0,gid=0):
     try:
         # analyze query
@@ -40,6 +38,30 @@ def gstone(message,uid=0,gid=0):
             data = requests.get(href,headers=headers)
             isoup = BeautifulSoup(data.content, 'html.parser')
             
+            # get name and tags
+            title_div = isoup.find_all('div','details-title')[0]        
+            name = title_div.find_all('h2')[0].text
+            tags = " ".join( [ x.text for x in title_div.find_all('p')[0].find_all('a')] )
+
+            # get score and rank
+            score_div = isoup.find_all('div','ddettop-right')[0]
+            score = score_div.find_all('p')[0].text
+            rank = score_div.find_all('span')[0].text
+
+            # get number players
+            #recommand = list()
+            #support = list()
+            #for line in data.content:
+            #    if "playerNumList:" in line:
+            #        tmp = line.split(":")[1].strip(",")
+            #        tmp = tmp.lstrip("{").strip("}")
+            #        for i in tmp.split(","):
+            #            key,value = i.split(":")
+            #            if value=="1":
+            #                support.append( key.lstrip("\"").strip("\"") )
+            #            if value=="2":
+            #                recommand.append( key.lstrip("\"").strip("\"") )
+    
             # get programa info 
             all_p = list()
             for div in isoup.find_all('div','programa01'):
@@ -63,8 +85,10 @@ def gstone(message,uid=0,gid=0):
                 bggid = 0
 
             # output
-            m = f'[CQ:image,file=gstone.png] BGG_ID:{bggid} \n{all_p}'
+            m = f'[CQ:image,file=gstone.png]' # \n{name}\n{tags}\nScore {score} {rank}\nBGG_ID {bggid}\n{all_p}'
             analysis.send_msg(m,uid=uid,gid=gid)
+            m = f'{name}\n{tags}\nScore {score} {rank}\nBGG_ID {bggid}\n{all_p}'
+            analysis.send_msg(m,uid=uid,gid=gid,to_image=True)
 
             # only return one result 
             break

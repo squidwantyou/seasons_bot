@@ -41,7 +41,7 @@ def get_consecutive(uid):
     global TIME_CONDITION
     N = 0
     while (True ):
-        tmp_condition = f'time between addtime( if( hour(curtime())<=3 , curdate()-1-{N} , curdate() - {N} )  ,"4:0:0") and addtime( if( hour(curtime())<=3 , curdate()-{N}, curdate()+1-{N} )  ,"4:0:0")'
+        tmp_condition = f'date(time) = curdate()-{N}'
         cmd = f"select * from hello where qq={uid} and word = 'morning' and {tmp_condition}"
         results = analysis.source_mysql( cmd )
         if ( len(results) >= 1 ):

@@ -11,6 +11,7 @@ import numpy as np
 from analysis import source_mysql,send_msg
 import analysis
 
+
 FILENAME='pzjqr.png'
 N = 16
 margin = 0
@@ -588,7 +589,11 @@ def draw_state(board,outfile = 'tmp.png',title="",xlabel = '',fontproperties = N
     draw_wall(ax, board.current_board ) 
     print("targets:",board.targets)
     sys.stdout.flush()
-    draw_token(ax, board.targets )
+    try:
+        draw_token(ax, board.targets )
+    except:
+        draw_token(ax, [board.target,] )
+        
     draw_token(ax, board.current_robots )
     
     try:
@@ -670,6 +675,7 @@ def report_status(gid,i_d = None):
         blob += '='* (4 - missing_padding)
     if len(blob) >10000:
         board = pickle.loads( base64.b64decode(blob) )
+        board.targets = [ board.target,]
     else:
         txt = pickle.loads( base64.b64decode(blob) )
         board = Board()
@@ -765,6 +771,7 @@ def load_last_board(gid,i_d = None):
             board.load_txt(txt)
         else:
             board = pickle.loads( base64.b64decode(blob) )
+            board.targets = [ board.target, ]
     except Exception as e:
         send_msg("O_O",uid=0,gid=gid)
     return board
@@ -820,7 +827,9 @@ def pzjqr( message, uid, gid ):
     elif path.isdigit():  # if query historic puzzle
         try:
             report_status(gid,i_d = int(path) )
-        except:
+        except Exception as e:
+            print(e)
+            sys.stdout.flush()
             analysis.send_msg("O_O 找不到捏",uid=uid,gid=gid)
 
     elif path.split()[0] == 'update': # update historic puzzle
@@ -882,16 +891,16 @@ def pzjqr( message, uid, gid ):
                 update_puzzle(gid,steps,path,qq=uid)
                 # draw_state(board,f"data/images/tmp_{gid}_{FILENAME}")
                 # send_msg(f"[CQ:image,file=tmp_{gid}_{FILENAME}]",gid=gid)
-                analysis.send_msg(f"TQL! 您的解是:{path}",uid=uid,gid=gid)
+                analysis.send_msg(f"TQL! 您的解是:{path}",uid=uid,gid=gid,at=True)
                 report_status(gid)
             else:
                 draw_state(board,f"data/images/tmp_{gid}_{FILENAME}")
-                send_msg(f"[CQ:image,file=tmp_{gid}_{FILENAME}]",gid=gid)
-                analysis.send_msg("似乎没有走到终点=_=",uid=uid,gid=gid)
+                send_msg(f"[CQ:image,file=tmp_{gid}_{FILENAME}]",uid=uid,gid=gid)
+                analysis.send_msg("似乎没有走到终点=_=",uid=uid,gid=gid,at=True)
             pass
 
         except Exception as e :
             print(e)
             sys.stdout.flush()
-            analysis.send_msg("X=_=X 小触手看不懂这个耶",uid=uid,gid=gid)
+            analysis.send_msg("X=_=X 小触手看不懂这个耶",uid=uid,gid=gid,at=True)
 

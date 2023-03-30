@@ -4,6 +4,12 @@ from urllib.parse import parse_qs
 import pymysql
 import requests
 import base64
+import sys,os
+import PIL
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageFont
+import io
 # import api_puzzle
 
 def b64e(s):
@@ -12,12 +18,37 @@ def b64e(s):
 def b64d(s):
     return base64.b64decode(s).decode()
 
-def send_msg(m,uid=0,gid=0):
+def send_msg(m,uid=0,gid=0,at = False,to_image=False):
     if not m.startswith("/"):
-        data = {'group_id': gid  , 'message':m} 
+        if at:
+            data = { 'group_id': gid  , 'message':f"[CQ:at,qq={uid}] " + m } 
+        else:
+            data = { 'group_id': gid  , 'message':m } 
         url = 'http://0.0.0.0:5700/send_group_msg'
         print(">>>>> send_msg:",data, url)
-        requests.post( url=url, data=data )
+        if not to_image:
+            requests.post( url=url, data=data )
+        else:
+            word_size = 16
+            word_css = 'fonts/msyh.ttf'
+            font = ImageFont.truetype(word_css,word_size,encoding='unic') 
+            #font = ImageFont.core.getfont(word_css,word_size,encoding='unic') 
+            text_width, text_height = font.getsize( m )
+            text_height = len(m.split("\n")) * 20 + 16
+            text_width  = max( [ 10*len(x) for x in m.split("\n") ] )
+
+            img = Image.new('RGB', (text_width + 20 , text_height + 20 ),(255,255,255))
+            d = ImageDraw.Draw(img)
+            d.text( (10, 10), m, fill=(0, 0, 0),font=font )
+
+            s = io.BytesIO()
+            img.save(s, 'png')
+            in_memory_file = s.getvalue()
+            with open("data/images/tmp_text2png.png",'wb') as ofp:
+                ofp.write(in_memory_file)
+            data = { 'group_id': gid  , 'message':'[CQ:image,file=tmp_text2png.png]' } 
+            requests.post( url=url, data=data )
+
     else:
         data = { 'message_type':'group',
                 'group_id':gid,
@@ -61,6 +92,8 @@ def source_mysql(cmd):
     results = 'ERROR'
     try:
         cursor = db.cursor()
+        print(cmd)
+        sys.stdout.flush()
         cursor.execute(cmd)
         results = cursor.fetchall()
         db.commit()

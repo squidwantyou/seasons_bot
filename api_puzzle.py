@@ -23,6 +23,7 @@ import cat
 import dog
 import say9
 import gstone
+import world
 
 def keyword(message,uid,gid = None):
     message = Message(message)
@@ -96,6 +97,8 @@ def keyword(message,uid,gid = None):
                 pzjqr.pzjqr(message,uid,gid)
             elif true_startswith( message, '/gstone'): 
                 gstone.gstone(message,uid,gid)
+            elif true_startswith( message, '/world'): 
+                world.world(message,uid,gid)
             elif true_startswith( message, '/-' ): 
                 fother.other(message,uid,gid)
             else:
