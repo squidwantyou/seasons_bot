@@ -24,6 +24,14 @@ import dog
 import say9
 import gstone
 import world
+import douyinboy
+import anwei
+import xqs
+import tiangou
+import kouchou
+import wu
+import history 
+
 
 def keyword(message,uid,gid = None):
     message = Message(message)
@@ -83,8 +91,12 @@ def keyword(message,uid,gid = None):
                 fsort.fsort(message,uid,gid)
             elif true_startswith( message, '/夸我','/kk', '/kw' ):  # from weilan
                 fc.kk(message,uid,gid)
-            elif true_startswith( message, '/小姐姐','/四次元', '/girl','/臭鳜鱼' ):  
+            elif true_startswith( message, '/求安慰','/anwei','/安慰'):  # from weilan
+                anwei.anwei(message,uid,gid)
+            elif true_startswith( message, '/小姐姐','/四次元', '/girl','/臭鳜鱼'  ):  
                 douyingirl.douyingirl(message,uid,gid)
+            elif true_startswith( message, '/小哥哥','/boy','/烤鱼'):  
+                douyinboy.douyinboy(message,uid,gid)
             elif true_startswith( message, '/猫猫','/cat', '/miao','/喵' ):  
                 cat.cat(message,uid,gid)
             elif true_startswith( message, '/dog' ):  
@@ -93,12 +105,22 @@ def keyword(message,uid,gid = None):
                 echo.echo(message,uid,gid)
             elif true_startswith( message, '/9say' ): 
                 say9.say9(message,uid,gid)
+            elif true_startswith( message, '/xqs','/kfc','/KFC','/星期四' ): 
+                xqs.xqs(message,uid,gid)
             elif true_startswith( message, '/pz','/碰撞' ): 
                 pzjqr.pzjqr(message,uid,gid)
             elif true_startswith( message, '/gstone'): 
                 gstone.gstone(message,uid,gid)
+            elif true_startswith( message, '/tiangou','/舔狗'): 
+                tiangou.tiangou(message,uid,gid)
             elif true_startswith( message, '/world'): 
                 world.world(message,uid,gid)
+            elif true_startswith( message, '/口臭','/口吐莲花','/芬芳','/nmsl'): 
+                kouchou.kouchou(message,uid,gid)
+            elif true_startswith( message, '/wu','/污'): 
+                wu.wu(message,uid,gid)
+            elif true_startswith( message, '/history','/today','/历史今天'): 
+                history.history(message,uid,gid)
             elif true_startswith( message, '/-' ): 
                 fother.other(message,uid,gid)
             else:

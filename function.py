@@ -326,9 +326,9 @@ def kk(message,uid,gid):
     try:
         results = analysis.source_mysql(f"select * from kk order by rand() limit 1")
         text = analysis.b64d( results[0][1] )
-        analysis.send_msg( text, uid=uid,gid=gid )
+        analysis.send_msg( text, uid=uid,gid=gid,at=True )
     except:
-        analysis.send_msg( "程序沉醉于您的美貌,都停止运行了", uid=uid,gid=gid )
+        analysis.send_msg( "程序沉醉于您的美貌,都停止运行了", uid=uid,gid=gid,at=True )
 
 def gushi(message,uid,gid):
     try:

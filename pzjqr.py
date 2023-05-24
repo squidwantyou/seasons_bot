@@ -777,6 +777,14 @@ def load_last_board(gid,i_d = None):
     return board
 
 def sanitize_path(path):
+    path = path.replace("红",'r')
+    path = path.replace("蓝",'b')
+    path = path.replace("黄",'y')
+    path = path.replace("绿",'g')
+    path = path.replace("上",'u')
+    path = path.replace("下",'d')
+    path = path.replace("左",'l')
+    path = path.replace("右",'r')
     newpath = ''
     if not path:
         return ''
@@ -832,7 +840,7 @@ def pzjqr( message, uid, gid ):
             sys.stdout.flush()
             analysis.send_msg("O_O 找不到捏",uid=uid,gid=gid)
 
-    elif path.split()[0] == 'update': # update historic puzzle
+    elif path.split()[0] in [ 'update','updata' ]: # update historic puzzle
         try:
             i_d = int(path.split()[1])
             path = " ".join( path.split()[2:] )

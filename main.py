@@ -2,6 +2,7 @@
 from flask import Flask, request
 import api_seasons
 import api_puzzle
+# import api_private
 
 app = Flask(__name__)
 
@@ -20,6 +21,10 @@ def post_data():
                         api_puzzle.keyword(message,uid,gid)
                 else:
                         api_puzzle.keyword(message,uid,gid)
+        elif request.get_json().get('message_type') == 'private' :
+            uid = request.get_json().get('sender').get('user_id')
+            message = request.get_json().get('raw_message')
+            api_private.keyword(message,uid,gid=None)
         return 'OK'
 
 if __name__ == '__main__':

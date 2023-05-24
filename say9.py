@@ -13,7 +13,7 @@ def say9(message,uid=0,gid=0):
         with open("tmpsay9.txt",'w') as ofp:
             ofp.write(text)
         os.system('convert data/images/qln2.png -gravity north  -stroke "#666C" -strokewidth 2 -fill "#333333" -font \
-                    "./fonts/a.ttf" -pointsize 50 -annotate +0+530 @tmpsay9.txt   data/images/qln_out.png' )
+                    "./fonts/unifont-15.0.01.ttf" -pointsize 50 -annotate +0+530 @tmpsay9.txt   data/images/qln_out.png' )
 
         m = f'[CQ:image,file=qln_out.png]'
         analysis.send_msg(m,uid=uid,gid=gid)

@@ -129,8 +129,13 @@ def get_nick_name(message,gid,uid):
         return reply_msg
     except:
         return "Cthulhu"
-       
-    
+
+def send_private_msg(m,uid):
+    data = { 'user_id': uid  , 'message':m } 
+    url = 'http://0.0.0.0:5700/send_msg'
+    print(">>>>> send_priveate_msg:",data )
+    requests.post( url=url, data=data )
+    return
 
 # m = '/+bga [CQ:at,qq=937404959] zyyzxyz'
 # m = Message(m)
