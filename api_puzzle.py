@@ -31,6 +31,8 @@ import tiangou
 import kouchou
 import wu
 import history 
+import bf
+import suanming
 
 
 def keyword(message,uid,gid = None):
@@ -121,6 +123,10 @@ def keyword(message,uid,gid = None):
                 wu.wu(message,uid,gid)
             elif true_startswith( message, '/history','/today','/历史今天'): 
                 history.history(message,uid,gid)
+            elif true_startswith( message, '/算命','/sm','/lp','/运势','/yunshi','/ys','/jrrp' ): 
+                suanming.suanming(message,uid,gid)
+            elif true_startswith( message, '/bf' ): 
+                bf.bf(message,uid,gid)
             elif true_startswith( message, '/-' ): 
                 fother.other(message,uid,gid)
             else:

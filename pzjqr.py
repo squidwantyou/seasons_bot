@@ -11,7 +11,6 @@ import numpy as np
 from analysis import source_mysql,send_msg
 import analysis
 
-
 FILENAME='pzjqr.png'
 N = 16
 margin = 0
@@ -800,6 +799,91 @@ def sanitize_path(path):
         newpath = newpath + " " + r
     return newpath
 
+def statistics(uid,gid):
+    a = source_mysql("select id,steps,solver from pzjqr where `id`>319")
+
+    fig,axes = plt.subplots( nrows=2, ncols=2, figsize=(10,10) )
+    ax0, ax1, ax2, ax3 = axes.flatten()
+
+    # ax0 pie
+    import numpy as np
+    labels = ["[0,5)","[5,10)","[10,15)","[15,20)","20+","Not solved"]
+    values = np.zeros( (6,) )
+
+    for (i,steps,player) in a:
+        print(steps)
+        if 0<steps<5:
+            values[0] += 1
+        elif 5<=steps<10 :
+            values[1] += 1
+        elif 10<=steps<15 :
+            values[2] += 1
+        elif 15<=steps<20 :
+            values[3] += 1
+        elif 20<=steps<9999 :
+            values[4] += 1
+        else:
+            values[5] += 1
+
+    print(values)
+    for i in range(6):
+        values[i] = values[i] * 1.0 / len(a) 
+
+    print(values)
+    ax0.pie( values, explode=None, startangle=180,labels = labels,autopct="%0.1f",pctdistance=0.8)
+    ax0.set_title("Puzzle States (steps)")
+
+    # ax1 steps
+    values = list()
+
+    for (i,steps,player) in a:
+        if 0<steps<30:
+            values.append(steps)
+
+    l,r = min(values),max(values)
+    ax1.hist( values, bins = r-l+1, density = False, cumulative=False, label=None, color='r', alpha=0.5,lw=1,edgecolor='g')
+    ax1.set_title("Solution Steps Distribution")
+
+    # player
+    values = dict()
+    for (i,steps,player) in a:
+        name = analysis.get_nick_name(message=None,gid=gid,uid =player)
+        if name in values:
+            values[name] += 1
+        else:
+            values[name]  = 1
+
+    skey = sorted( values.keys(), key=lambda x:values[x], reverse = True )
+    x = [ values[x] for x in skey ]
+    ax2.bar(skey,x )
+
+    myfont = matplotlib.font_manager.FontProperties(fname='fonts/msyh.ttf')
+    ax2.set_xticks( [ x+0.4 for x in range(len(skey)) ], rotation=70, ha='right', labels=skey)
+    ax2.set_xticklabels( skey, rotation=70, ha='right',fontproperties = myfont)
+    ax2.set_title("Players")
+
+    # hard games
+    games = dict()
+    for (i,steps,player) in a:
+        if 15<steps<9999:
+            games[i] = steps
+
+    skey = sorted( games.keys(), key=lambda x:games[x], reverse = True )
+    text = "\n".join( [ f"{x}:{games[x]}" for x in skey[:20] ] )
+    ax3.text(0.1,0,text)
+    text = "\n".join( [ f"{x}:{games[x]}" for x in skey[20:40] ] )
+    ax3.text(0.3,0,text)
+    text = "\n".join( [ f"{x}:{games[x]}" for x in skey[40:60] ] )
+    ax3.text(0.5,0,text)
+    text = "\n".join( [ f"{x}:{games[x]}" for x in skey[60:80] ] )
+    ax3.text(0.7,0,text)
+
+    ax3.set_title("Hard Puzzles")
+    ax3.set_axis_off()
+    plt.savefig("data/images/pzjqr_stat.png")
+    send_msg(m="[CQ:image,file=pzjqr_stat.png]",uid=uid,gid=gid,)
+    plt.cla()
+
 def pzjqr( message, uid, gid ):
     path = ''
     try:
@@ -823,6 +907,9 @@ def pzjqr( message, uid, gid ):
         finish_puzzle(gid)
         make_puzzle(gid)
         report_status(gid)
+
+    elif path == 'stat':    # make new puzzle
+        statistics(uid=uid,gid=gid)
 
     elif check_finished(gid): # if finished
         make_puzzle(gid)

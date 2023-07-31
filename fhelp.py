@@ -33,6 +33,7 @@ def fhelp(message,uid=0,gid=0):
         [ '/pz','/碰撞' ],
         [ '/猫猫','/cat', '/miao','/喵' ],  
         [ '/dog', ],  
+        [ '/运势', ],  
         [ '/9say', ],  
         [ '/boy',],
         [ '/anwei',],

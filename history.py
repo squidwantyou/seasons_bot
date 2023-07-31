@@ -6,7 +6,7 @@ import analysis
 
 apiurl = 'https://api.wqwlkj.cn/wqwlapi/kfcyl.php?type=json'
 apiurl = 'https://v.api.aa1.cn/api/api-saohua/index.php?type=json'
-apiurl = 'https://zj.v.api.aa1.cn/api/bk/?num=5'
+apiurl = 'https://zj.v.api.aa1.cn/api/bk/'
 
 
 def history(message,uid=0,gid=0):
