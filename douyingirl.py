@@ -16,11 +16,17 @@ def douyingirl(message,uid=0,gid=0):
             'From': 'youremail@domain.example', # This is another valid field,
             'referer':'www.baidu.com'
         }
-        data = requests.get(apiurl,headers=headers)
+        data = requests.get(apiurl,headers=headers,verify=False)
         imgurl=json.loads(data.content)['mp4'].lstrip("//")
         imgurl = "https://" + imgurl.replace(" ","%20")
-        m = f'[CQ:video,file={imgurl},c=3]'
-        print(m)
+        if False:
+            m = f'[CQ:video,file={imgurl},c=3]'
+            print(m)
+        else:
+            with open("data/videos/girl.mp4",'wb') as ofp:
+                data = requests.get(imgurl,headers=headers,verify=False)
+                ofp.write( data.content )
+                m = f'[CQ:video,file=girl.mp4]'
         analysis.send_msg(m,uid=uid,gid=gid)
 
     except Exception as e:

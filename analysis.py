@@ -88,6 +88,8 @@ class CQ:
                 self.raw=''
 
 def source_mysql(cmd):
+    print(cmd)
+    sys.stdout.flush()
     db = pymysql.connect(host='localhost', user='seasons', password='123', database='seasons')
     results = 'ERROR'
     try:

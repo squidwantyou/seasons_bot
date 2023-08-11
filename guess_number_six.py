@@ -2,9 +2,9 @@ from analysis import source_mysql,send_msg
 import random as rd
 import sys,os
 
-MAX_TRIAL=3
+MAX_TRIAL=5
 PRE_TRIAL=7
-L = 5
+L = 6
 n_trials = 0
 
 def error(gid = 0):
@@ -44,7 +44,7 @@ def make_puzzle():
         candidates = truncate( candidates, trials, answer )
 
     log = log.strip()
-    cmd = f"INSERT INTO gn5 ( answer,queries, status ) VALUES ( '{answer}', '{log}', 0 )"
+    cmd = f"INSERT INTO gn6 ( answer,queries, status ) VALUES ( '{answer}', '{log}', 0 )"
     tmp = source_mysql(cmd)
     #print(answer)
     #print(log)
@@ -72,16 +72,16 @@ def analyze_query( answer, query ) :
     return (a,b)
 
 def log_into_database(answer, log, finished = 0):
-    cmd = "SELECT * FROM gn5  ORDER BY id DESC LIMIT 1;" 
+    cmd = "SELECT * FROM gn6  ORDER BY id DESC LIMIT 1;" 
     result = source_mysql(cmd)
     index = int(result[0][0])
-    print(f"UPDATE gn5 SET queries='{log}',status={finished} WHERE id={index} ")
-    cmd = f"UPDATE gn5 SET queries='{log}',status={finished} WHERE id={index} "
+    print(f"UPDATE gn6 SET queries='{log}',status={finished} WHERE id={index} ")
+    cmd = f"UPDATE gn6 SET queries='{log}',status={finished} WHERE id={index} "
     result = source_mysql(cmd)
     return
 
 def fetch_last_puzzle():
-    cmd = "select * from gn5  ORDER BY id DESC LIMIT 1;" 
+    cmd = "select * from gn6  ORDER BY id DESC LIMIT 1;" 
     result = source_mysql(cmd)
     return result[0]
 
@@ -101,7 +101,7 @@ def report_status(uid=None,gid=None):
         query,A,B = trial.split(":")
         m += f"{query}\t{A}A{B}B\n"
     if status == 0:
-        m += "输入 /5a2b xxxx 继续猜，或者/5a2b stop 停止猜数"
+        m += "输入 /6a2b xxxxxx 继续猜，或者/6a2b stop 停止猜数"
     else:
         m += "正确，TQL"
     send_msg(gid=gid,m=m)
@@ -111,7 +111,7 @@ def report_status(uid=None,gid=None):
 def finish_puzzle():
     puzzle = fetch_last_puzzle()
     index = puzzle[0]
-    cmd = f'UPDATE gn5 SET status=1 WHERE id={index}'
+    cmd = f'UPDATE gn6 SET status=1 WHERE id={index}'
     result = source_mysql(cmd)
     return
 
@@ -142,7 +142,7 @@ def guess_number(message,uid,gid):
                 n_trials += 1
                 # log_into_database(answer, log, finished=0)# log into database
                 report_status(gid=gid) # report current status
-                if not query == "xxxxx":
+                if not query == "xxxxxx":
                     send_msg(gid=gid,m=f"{query} 不对哦，请再想想") 
                 if n_trials >= MAX_TRIAL:
                 # if len(log.split()) >= MAX_TRIAL - 1 :# if max trial

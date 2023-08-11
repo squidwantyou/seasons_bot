@@ -19,8 +19,8 @@ class Yunshi:
         self.const_h = fhash( query )
         self.h = self.const_h
         self.report_images = list()
+        self.add_text(f">>>>>>>----------------------->")
         self.add_text("Hello," + nickname + ",这是您今天的运势:" )
-
         self.init_touhou()
         self.lucky_num()
         self.direct()
@@ -47,9 +47,14 @@ class Yunshi:
         self.add_common("jpsinger","今日日本歌手")
         self.add_common("mgmusicer","今日音游曲师")
         self.add_common("rockroll","今日摇滚乐队")
+        self.add_common("comic","今日漫画")
+        self.add_common("movie","今日电影")
+        self.add_common("chaodai","最佳穿越朝代")
         self.fallasleep()
         self.sports()
         self.jrrp()
+        self.attack()
+        self.add_text(f">>>>>>>----------------------->")
     
     
     def add_common(self, name, welcome ):
@@ -58,6 +63,18 @@ class Yunshi:
             all_choice.append(line.strip())
         choice = self.get_choice( all_choice )
         self.add_text(f"{welcome} : {choice}" )
+        pass
+
+    def attack(self):
+        atk = self.get_choice( range(10,100) )
+        defend =  self.get_choice( range(10,50) )
+        hp = self.get_choice( range(200,500) )
+        weapon = list()
+        for line in open("suanming.data/weapon.list"):
+            weapon.append(line.strip())
+        weapon = self.get_choice(weapon) 
+        self.add_text(f"攻击:{atk}  防御:{defend}  血量:{hp}" )
+        self.add_text(f"武器:{weapon}" )
         pass
 
     def jrrp(self):
@@ -93,7 +110,7 @@ class Yunshi:
         
 
     def add_text(self, text, color = "#000000" ):
-        im1 = Image.new('RGB', (600, 32), "#ffffff")
+        im1 = Image.new('RGB', (600, 32), "#FFF6DC")
         draw = ImageDraw.Draw(im1)
         font = ImageFont.truetype('fonts/msyh.ttf', 20)
         draw.text((0,0), text, font=font, fill=color)
@@ -260,7 +277,7 @@ class Yunshi:
     def lucky_num(self):
         all_choice = range(16)
         choice = self.get_choice( all_choice )
-        im1 = Image.new('RGB', (300, 32), "#ffffff")
+        im1 = Image.new('RGB', (300, 32), "#FFF6DC")
         draw = ImageDraw.Draw(im1)
         font = ImageFont.truetype('fonts/msyh.ttf', 20)
         draw.text((0,0), f"今日幸运数字: {choice} ", font=font, fill="#000000")
@@ -272,7 +289,7 @@ class Yunshi:
             all_choice.append( line.strip() )
         choice = self.get_choice( all_choice )
 
-        im1 = Image.new('RGB', (300, 32), "#ffffff")
+        im1 = Image.new('RGB', (300, 32), "#FFF6DC")
         draw = ImageDraw.Draw(im1)
         font = ImageFont.truetype('fonts/msyh.ttf', 20)
         draw.text((0,0), f"今日老婆: {choice} ", font=font, fill="#000000")
@@ -286,6 +303,8 @@ class Yunshi:
         n_d = math.ceil( math.log(n,16) )
         if len(self.h) < n_d:
             self.h = self.const_h
+
+        print(" suanming debug: ",len(self.h))
         a = int( self.h[:n_d], 16 )
         self.h = self.h[n_d:]
         ratio = int( a*1.0/(16**n_d)*n  )
@@ -298,7 +317,7 @@ class Yunshi:
         width_l =   [ x.width  for x in self.report_images ]
         height_l  = [ x.height for x in self.report_images ]
 
-        dst = Image.new('RGB', ( max(width_l), sum(height_l) ), "#ffffff" )
+        dst = Image.new('RGB', ( max(width_l), sum(height_l) ), "#FFF6DC" )
         h = 0
         for im in self.report_images:
             dst.paste(im, (0, h))
@@ -318,48 +337,26 @@ def suanming(message,uid=0,gid=0):
             salt = ''
 
         b = time.gmtime()
-        query = salt + str(uid) + str(b.tm_year) +str( b.tm_mon) +str( b.tm_mday ) 
-        
-        nickname = analysis.get_nick_name(message,gid,uid)
+        if salt == '':
+            query = salt + str(uid) + str(b.tm_year) +str( b.tm_mon) +str( b.tm_mday ) 
+            nickname = analysis.get_nick_name(message,gid,uid)
+        else:
+            query = salt 
+            nickname = query
 
         yunshi = Yunshi( query, nickname )
         m = yunshi.report()
         analysis.send_msg(m,uid=uid,gid=gid)
 
-        # 短评
-        ### 幸运数字
-        ### 方位
-        ### 颜色
-        ### 吉时
-        ### 星座
-        ### 宜
-        ### 忌
-        ### 车万伴侣 
-        ### 桌游
-        ### 游戏
-        ### 小说
-        ### 新番
-        ### 圈子
-        ### dnd 角色
-        ### 哲学
-        ### 饮食
-        ### 解谜游戏
-        ### 女优
-        ### 诗歌
-        ### 建镇阵营
-        ### 幸运优
-        ### 编程语言
-        ### touhou music
-        ### eu singer
-        ### rockroll
-        ### music game musisian
-        ### cn歌手
-        ### 运动时间
-        ### 入睡时刻
         # 圣经
         # 幸运字
-        # 表白用语
+        # 幸运emoji
         # 水群强度
+        # 表白用语
+        # attack defend hp sp weapon
+        # movie
+        # beijing opera
+        # 
 
 
     except Exception as e:

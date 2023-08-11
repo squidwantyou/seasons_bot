@@ -4,9 +4,11 @@ import json
 import re
 import analysis
 
-apiurl = "https://api.xiaobaibk.com/api/pic/?pic=meizi"
 #apiurl = "https://tuapi.eees.cc/api.php?category=meinv"
 apiurl = 'https://3650000.xyz/api/?type=json'
+apiurl = "https://api.xiaobaibk.com/api/pic/?pic=meizi"
+
+
 
 def scy(message,uid=0,gid=0):
     try:
@@ -16,9 +18,13 @@ def scy(message,uid=0,gid=0):
             'referer':'www.baidu.com'
         }
         data = requests.get(apiurl,headers=headers)
-        imgurl=json.loads(data.content)['url']
-        m = f'[CQ:image,file={imgurl}]'
- #       print(m)
+        if True:
+            with open("data/images/scy.jpg","wb") as ofp:
+                ofp.write( data.content )
+            m = f'[CQ:image,file=scy.jpg]'
+        else:
+            imgurl=json.loads(data.content)['url']
+            m = f'[CQ:image,file={imgurl}]'
         analysis.send_msg(m,uid=uid,gid=gid)
 
     except Exception as e:

@@ -5,6 +5,7 @@ import re
 import analysis
 
 apiurl = "http://www.loliapi.com/bg/"
+# apiurl = "https://api.oick.cn/random/api.php?type=pe"
 
 def ecy(message,uid=0,gid=0):
     print(">>>>> Called ecy")

@@ -3,6 +3,7 @@ import function as fc
 from analysis import *
 from guess_number_2 import guess_number
 import guess_number_five 
+import guess_number_six 
 import ecy
 import scy
 import touhou
@@ -33,6 +34,10 @@ import wu
 import history 
 import bf
 import suanming
+import suijilaopo
+import hougong
+import dianzan
+import minesweeper_battle
 
 
 def keyword(message,uid,gid = None):
@@ -67,6 +72,8 @@ def keyword(message,uid,gid = None):
                 guess_color.guess_color(message,uid,gid)
             elif true_startswith( message, '/5a2b' ): 
                 guess_number_five.guess_number(message,uid,gid)
+            elif true_startswith( message, '/6a2b' ): 
+                guess_number_six.guess_number(message,uid,gid)
             elif true_startswith( message, '/诗词' ,'/一次元'): 
                 fc.shici(message,uid,gid)
             elif true_startswith( message, '/土味' ,'/twqh','/土味情话'): 
@@ -127,6 +134,14 @@ def keyword(message,uid,gid = None):
                 suanming.suanming(message,uid,gid)
             elif true_startswith( message, '/bf' ): 
                 bf.bf(message,uid,gid)
+            elif true_startswith( message, '/suijilaopo','/sjlp','/随机老婆' ): 
+                suijilaopo.suijilaopo(message,uid,gid)
+            elif true_startswith( message, '/后宫', '/hougong','/hg' ): 
+                hougong.hougong(message,uid,gid)
+            elif true_startswith( message, '/dianzan', '/点赞' ): 
+                dianzan.dianzan(message,uid,gid)
+            elif true_startswith( message, '/mwb', '/扫雷','/猫尾巴' ): 
+                minesweeper_battle.mwb(message,uid,gid)
             elif true_startswith( message, '/-' ): 
                 fother.other(message,uid,gid)
             else:

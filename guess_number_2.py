@@ -151,7 +151,7 @@ def guess_number(message,uid,gid):
                     finish_puzzle() # finish current puzzle
             else: # if right
                 send_msg(gid=gid,m=f"您TQL，没错，就是 {answer}") 
-                send_msg(gid=gid,m="/ecy") 
+                send_msg(gid=gid,m="/dianzan") 
                 #log_into_database(answer, log+f" {query}:{A}:{B}", finished=1)# log into database
                 #report_status(gid=gid) # report current status
                 # finish current puzzle
