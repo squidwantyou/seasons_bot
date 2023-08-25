@@ -13,12 +13,13 @@ def tiangou(message,uid=0,gid=0):
             'From': 'youremail@domain.example', # This is another valid field,
             'referer':'www.baidu.com'
         }
-        data = requests.get(apiurl,headers=headers)
+        data = requests.get(apiurl,headers=headers,verify=False)
         #imgurl=json.loads(data.content)['msg']
         imgurl=data.content
         imgurl = imgurl.decode('utf8').lstrip('\n<p>').strip('</p>')
         m = imgurl
         print(m)
+        m = f"/rds {m}"
         analysis.send_msg(m,uid=uid,gid=gid)
 
     except Exception as e:

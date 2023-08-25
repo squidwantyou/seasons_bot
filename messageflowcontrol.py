@@ -21,7 +21,8 @@ class Mfc:
                 self.account.append(uid)
                 self.recruit_left -= 1
             else:
-                if uid not in self.account:
+                #if uid not in self.account:
+                if True:
                     self.account.append(uid)
                     self.recruit_left -= 1
                 else:

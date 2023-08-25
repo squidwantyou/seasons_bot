@@ -12,10 +12,10 @@ import random as rd
 def suijilaopo(message,uid=0,gid=0):
     print(">>>>> Called suijilaopo")
     try:
-        pics = glob.glob("/root/moe/images/*jpg")
-        a = rd.choice( pics )
-        laoponame = os.path.basename(a).strip(".jpg")
-        nickname = analysis.get_nick_name(message,gid,uid)
+        laoponames,laopofiles = analysis.get_laopo(uid,1)
+        nickname = analysis.get_nick_name(message,uid=uid,gid=gid)
+        laoponame = laoponames[0]
+        a = laopofiles[0]
 
         im1 = Image.new('RGB', (400, 32), "#FFF6DC")
         draw = ImageDraw.Draw(im1)
@@ -45,8 +45,5 @@ def suijilaopo(message,uid=0,gid=0):
     except Exception as e:
         print(e)
         analysis.send_msg("是个女人就是你老婆么?",uid=uid,gid=gid)
-
-
-
 
 

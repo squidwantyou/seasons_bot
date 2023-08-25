@@ -54,6 +54,7 @@ class Yunshi:
         self.sports()
         self.jrrp()
         self.attack()
+        self.majong()
         self.add_text(f">>>>>>>----------------------->")
     
     
@@ -63,6 +64,85 @@ class Yunshi:
             all_choice.append(line.strip())
         choice = self.get_choice( all_choice )
         self.add_text(f"{welcome} : {choice}" )
+        pass
+
+    def majong(self):
+        self.add_text(f"今天也好好好打麻将, 您的幸运雀士:" )
+
+        # chapterone
+        all_choice = list()
+        for line in open("data/images/majsoul/list"):
+            all_choice.append( line.strip() )
+        choice = self.get_choice( all_choice )
+        im2 = Image.open(f"data/images/majsoul/{choice}.png") 
+        im2 = im2.resize( (300, int(im2.height *1.0/im2.width * 300 ) ) )
+        self.report_images.append( im2 )
+
+        # yakuman
+        all_yakuman = "天和,地和,四暗刻,国士无双,九莲宝灯,大三元,字一色,绿一色,清老头,小四喜,四杠子,四暗刻单骑,国士无双十三面,纯正九莲宝灯,大四喜".split(",")
+        all_yakuman.append("累计役满")
+        all_yakuman.append("役满?做梦吧你")
+        yakuman = self.get_choice( all_yakuman )
+        self.add_text(f"今日役满: {yakuman}" )
+
+        all_condition = [ 
+	    [ "拉新人打牌", "对方战斗力不足","被新人嚎成四位", ],
+	    [ "焚香沐浴更衣", "排除毒素一身轻松","会把嚎运洗掉",] ,
+	    [ "吃东西打牌", "谈笑间樯橹灰飞烟灭","顺势一波直接吃四", ],
+	    [ "打牌时闲聊", "其他人频频判断失误","没有人回应话题，气氛尴尬", ],
+	    [ "在雨天打麻将", "场地魔法卡！","淅淅沥沥拖拖拉拉毫无进张", ],
+	    [ "与亲家对攻", "亲家都是大愚形空听不要虚","铳亲地狱绝张亲跳一波被带走", ],
+	    [ "强凹役满", "神进张找回自信","打点再高，也怕断幺，牌型再吊，一番撂倒", ],
+	    [ "招募新人", "你面前这位有成为雀士的潜质","打牌？斗地主？", ],
+	    [ "去和新组织打", "让开，我要和他们谈笑风生","朱门酒肉臭，路有冻死骨", ],
+	    [ "拒绝约战邀请", "每个月总有那么三十几天不想动","此时不战更待何时！", ],
+	    [ "提出打钱", "千五标准只够塞牙缝","千一输光内裤", ],
+	    [ "正午打牌", "吃我旭日东升啦！","不忍直视……", ],
+	    [ "搓实体麻将", "甩棒拍桌轻松愉快","手抖眼斜强行诈和", ],
+	    [ "搓网络麻将", "欲穷升段路，凤凰一日游","右4开黑携手三四", ],
+	    [ "调整对局思路", "重拾对雀力的信心","自断经脉雀力尽失", ],
+	    [ "做超过跳满的牌", "大力出奇迹，杠出个未来","强做跳满铳倍满", ],
+	    [ "打比赛", "天下无双大杀四方","你的发挥如同天凤AI水平", ],
+	    [ "靠科学打牌", "判断精准如有神助","看运气的垃圾游戏好比永远是对的", ],
+	    [ "连续战斗", "一路高歌猛进","把吃回来的PT吐出去", ],
+	    [ "缩着打", "怂出一片天","有和无铳四", ],
+	    [ "提高立直率", "压着别家往死里打","不立直铳也要送根棒子", ],
+	    [ "提高副露率", "侵略如火其急如风","三副露no听对战三家立直", ],
+	    [ "终局狂日", "你将带头冲锋","自古南三出GG", ],
+	    [ "愚形听牌", "纯全一杯三色确定立一摸","七搭子从不上张", ],
+	    [ "和朋友讨论", "各种喜闻乐见的剧本","技术嚎运现充全面被晒", ],
+	    [ "留安牌", "一发避铳扭转乾坤","留安留出事", ],
+	    [ "研习科学理论", "贯彻落实科学发展观，雀力日进","没天赋还学人家打麻将，啧啧", ],
+        ]
+        
+        for yaku in ["立平断", "小三元", "七对子", "纯全带", "一气通贯", "三色同顺", "三暗刻", "岭上开花", "海底捞月"]:
+            all_condition.append( [ f"选择{yaku}役", "达成率显著提升","望山跑死马", ] )
+        for pai in ["东", "南", "西", "北", "白", "发", "中", "三索", "七筒", "赤五万", "赤五索", "赤五筒", "万字", "索字", "筒字"]:
+            all_condition.append( [ f"把{pai}牌留手里", "孤张摸成DORA面子","不是现物都是铳", ] )
+        
+        known = set()
+        for i in (1,2,3,):
+            select_condition = self.get_choice( all_condition )
+            if select_condition[0].startswith("把"):
+                k = 'ba'
+            elif select_condition[0].startswith("选择"):
+                k = 'xz'
+            else:
+                k = select_condition[0]
+            if k not in known:
+                known.add(k)
+                self.add_text(f"    麻将宜: {select_condition[0]} -- {select_condition[1]}" )
+        for i in (1,2,3,):
+            select_condition = self.get_choice( all_condition )
+            if select_condition[0].startswith("把"):
+                k = 'ba'
+            elif select_condition[0].startswith("选择"):
+                k = 'xz'
+            else:
+                k = select_condition[0]
+            if k not in known:
+                known.add(k)
+                self.add_text(f"    麻将忌: {select_condition[0]} -- {select_condition[2]}" )
         pass
 
     def attack(self):
@@ -320,7 +400,11 @@ class Yunshi:
         dst = Image.new('RGB', ( max(width_l), sum(height_l) ), "#FFF6DC" )
         h = 0
         for im in self.report_images:
-            dst.paste(im, (0, h))
+            if im.mode == "RGBA":
+                dst.paste(im, (0, h), mask = im)
+            else:
+                dst.paste(im, (0, h),)
+                
             h += im.height
 
         dst.save('data/images/suanming.jpg')

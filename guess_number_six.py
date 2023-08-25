@@ -25,7 +25,11 @@ def truncate( candidates, trials,answer ):
 def make_puzzle():
     global n_trials
     n_trials = 0
-    answer = f"%0{L}d"%rd.randrange( 0, 10**L )
+    if rd.random()>0.1:
+        answer = f"%0{L}d"%rd.randrange( 0, 10**L )
+    else:
+        answer = "114514"
+
     assert len(answer) == L 
     log = ''
 
@@ -151,7 +155,10 @@ def guess_number(message,uid,gid):
                     finish_puzzle() # finish current puzzle
             else: # if right
                 send_msg(gid=gid,m=f"您TQL，没错，就是 {answer}") 
-                send_msg(gid=gid,m="/dianzan") 
+                if query == "114514":
+                    send_msg(gid=gid,m="/dianzan 野兽先辈") 
+                else:
+                    send_msg(gid=gid,m="/dianzan") 
                 #log_into_database(answer, log+f" {query}:{A}:{B}", finished=1)# log into database
                 #report_status(gid=gid) # report current status
                 # finish current puzzle
@@ -165,5 +172,6 @@ def guess_number(message,uid,gid):
 #print(analyze_query(sys.argv[1],sys.argv[2]))
 # make_puzzle()
 # report_status(gid=0)
+
 
 

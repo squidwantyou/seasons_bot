@@ -9,9 +9,9 @@ import matplotlib.pyplot as plt
 from matplotlib.collections import LineCollection
 import matplotlib
 
-N = 4
+N = 5
 margin = 0
-RAND_HINT = 1
+RAND_HINT = 0
 ABC = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[:N]
 abc = "abcdefghijklmnopqrstuvwxyz"[:N]
 a123 = "123456789abcdefg"[:N]

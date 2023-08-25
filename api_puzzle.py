@@ -38,6 +38,9 @@ import suijilaopo
 import hougong
 import dianzan
 import minesweeper_battle
+import random_say
+import neutreeko
+import xp
 
 
 def keyword(message,uid,gid = None):
@@ -140,8 +143,14 @@ def keyword(message,uid,gid = None):
                 hougong.hougong(message,uid,gid)
             elif true_startswith( message, '/dianzan', '/点赞' ): 
                 dianzan.dianzan(message,uid,gid)
-            elif true_startswith( message, '/mwb', '/扫雷','/猫尾巴' ): 
+            elif true_startswith( message, '/mwb','/msb', '/扫雷','/猫尾巴' ): 
                 minesweeper_battle.mwb(message,uid,gid)
+            elif true_startswith( message, '/rds','/随机说'): 
+                random_say.rds(message,uid,gid)
+            elif true_startswith( message, '/ntk','/neutreeko','/三连棋'): 
+                neutreeko.ntk(message,uid,gid)
+            elif true_startswith( message, '/xp','/XP'): 
+                xp.xp(message,uid,gid)
             elif true_startswith( message, '/-' ): 
                 fother.other(message,uid,gid)
             else:

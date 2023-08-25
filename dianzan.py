@@ -12,17 +12,24 @@ import random as rd
 
 def dianzan(message,uid=0,gid=0):
     print(">>>>> Called dianzan")
+    print(f">>>>> select dianzan {message.text}")
+    sys.stdout.flush()
     try:
-        pics = glob.glob("/root/moe/images/*jpg")
-        a = rd.choice( pics )
-        name = os.path.basename(a).strip(".jpg")
-        nickname = analysis.get_nick_name(message,gid,uid)
+        if len(message.text.split()) > 1 and os.path.isfile(f"/root/seasons_bot/moe/images_2/{message.text.split()[1]}.jpg"):
+            name = message.text.split()[1]
+            nickname = analysis.get_nick_name(message,gid,uid)
+            a = f"/root/seasons_bot/moe/images_2/{name}.jpg"
+        else:
+            pics = glob.glob("/root/seasons_bot/moe/images_2/*jpg")
+            a = rd.choice( pics )
+            name = os.path.basename(a).strip(".jpg")
+            nickname = analysis.get_nick_name(message,gid,uid)
 
         im1 = Image.new('RGB', (400, 32), "#FFF6DC")
         draw = ImageDraw.Draw(im1)
         font = ImageFont.truetype('fonts/msyh.ttf', 20)
 
-        text = f"TQL, {name} 给你点个赞!"
+        text = f"TQL, {analysis.moe_name_back(name)} 给你点个赞!"
         draw.text((0,0), text, font=font, fill="#000000")
 
         imlist = list()
@@ -52,6 +59,7 @@ def dianzan(message,uid=0,gid=0):
         print(e)
         sys.stdout.flush()
         analysis.send_msg("是个女人就是你老婆么?",uid=uid,gid=gid)
+
 
 
 

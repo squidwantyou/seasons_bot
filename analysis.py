@@ -10,6 +10,8 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 import io
+import random as rd
+import glob
 # import api_puzzle
 
 def b64e(s):
@@ -138,6 +140,37 @@ def send_private_msg(m,uid):
     print(">>>>> send_priveate_msg:",data )
     requests.post( url=url, data=data )
     return
+
+def moe_name_back(a):
+    b = a.replace("@_","(").replace("_@",")") 
+    return b
+
+def get_laopo(uid, n = 1):
+    laoponames = list()
+    laopofiles = list()
+
+    result = source_mysql(f"select p from xp where uid = '{uid}'" )
+    if not result:
+        pics = glob.glob("/root/seasons_bot/moe/images_2/*jpg")
+        b = rd.sample( pics, n )
+        for a in b:
+            laoponames.append( moe_name_back(os.path.basename(a).strip(".jpg")) )
+            laopofiles.append( a )
+    else:
+        xps = set()
+        for tmp in result:
+            xps.add( f"'{tmp[0]}'" )
+        s = ','.join(xps)
+        result = source_mysql( f"select list from moe_list where xp in ({s})" )
+        all_names = list()
+        for r in result:
+            all_names.extend( b64d(r[0]).split('\t') )
+        b = rd.sample( all_names, n )
+        for a in b:
+            laoponames.append( moe_name_back(a) )
+            laopofiles.append( "/root/seasons_bot/moe/images_2/"+a+".jpg" )
+
+    return (laoponames,laopofiles )
 
 # m = '/+bga [CQ:at,qq=937404959] zyyzxyz'
 # m = Message(m)
