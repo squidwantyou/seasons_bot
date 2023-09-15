@@ -25,9 +25,11 @@ for line in open(infile):
         else:
             moe[current].add( filename )
 
+# analysis.source_mysql(f"DELETE FROM  moe_list ")
 for k in moe:
     if len(moe[k])==0:
         continue
+    print(k)
     c = analysis.b64e( "\t".join(moe[k]))  
     k = analysis.b64e(k)
-    analysis.source_mysql(f"INSERT INTO moe_list ( xp, list ) VALUES ( '{k}', '{c}' )")
+    # analysis.source_mysql(f"INSERT INTO moe_list ( xp, list ) VALUES ( '{k}', '{c}' )")

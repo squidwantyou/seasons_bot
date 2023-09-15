@@ -25,6 +25,7 @@ headers =  {
 ofp = open("moe_caracter_group.list",'w') 
 
 for line in open("all_moe.list"):
+#for line in open("tmp"):
     try:
         line = line.strip()
         print(">>>>> " ,line)
@@ -48,13 +49,18 @@ for line in open("all_moe.list"):
                     print(tmp.string)
 
             ofp.flush()
-            break
-            if last_tmp in known:
-                break
+            flag = False
+            next_url = None
+            for a in soup.find_all("a"):
+                if "下一页" in a.string:
+                    flag = True
+                    next_url = a['href']
+                    break
+            if next_url:
+                url = "https://zh.moegirl.org.cn" + next_url 
             else:
-                known.append(last_tmp)
+                break
 
-            url = f"https://zh.moegirl.org.cn/index.php?title=Category:{line}&subcatfrom={last_tmp}"
     except Exception as e :
         print("ERROR,line,e")
 

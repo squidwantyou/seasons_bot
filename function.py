@@ -310,17 +310,19 @@ def answer(message,uid,gid):
 def shici(message,uid,gid):
     data = requests.get("https://v1.jinrishici.com/all.json")
     text = json.loads(data.content)["content"]
-    analysis.send_msg( text, uid=uid,gid=gid )
+    #analysis.send_msg( text, uid=uid,gid=gid )
+    analysis.send_msg(f"/rds {text}", uid=uid,gid=gid )
     
 def tuweiqinghua(message,uid,gid):
     data = requests.get("https://api.vvhan.com/api/love")
     text = data.content.decode('utf-8')
-    analysis.send_msg( text, uid=uid,gid=gid )
+    analysis.send_msg(f"/rds {text}", uid=uid,gid=gid )
 
 def qinghua(message,uid,gid):
     data = requests.get("https://api.lovelive.tools/api/SweetNothings")
     text = data.content.decode('utf-8')
-    analysis.send_msg( text, uid=uid,gid=gid )
+    analysis.send_msg(f"/rds {text}", uid=uid,gid=gid )
+    #analysis.send_msg( text, uid=uid,gid=gid )
 
 def kk(message,uid,gid):
     try:
@@ -337,7 +339,8 @@ def gushi(message,uid,gid):
         query = analysis.b64e(shangju)
         results = analysis.source_mysql(f"select xiaju from pnbs where shangju='{query}' limit 1")
         text = analysis.b64d( results[0][0] )
-        analysis.send_msg( text, uid=uid,gid=gid )
+        #analysis.send_msg( text, uid=uid,gid=gid )
+        analysis.send_msg(f"/rds {text}", uid=uid,gid=gid )
     except:
         analysis.send_msg( "古籍浩如烟海,小触手Hold不住", uid=uid,gid=gid )
 

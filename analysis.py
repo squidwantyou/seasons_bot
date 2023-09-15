@@ -165,10 +165,47 @@ def get_laopo(uid, n = 1):
         all_names = list()
         for r in result:
             all_names.extend( b64d(r[0]).split('\t') )
-        b = rd.sample( all_names, n )
+
+        if n <= len(all_names):
+            b = rd.sample( all_names, n )
+        else:
+            b = rd.sample( all_names*n, n )
+
         for a in b:
             laoponames.append( moe_name_back(a) )
-            laopofiles.append( "/root/seasons_bot/moe/images_2/"+a+".jpg" )
+            laopofiles.append( "/root/seasons_bot/moe/images_all/"+a+".jpg" )
+
+    return (laoponames,laopofiles )
+
+def get_laogong(uid, n = 1):
+    laoponames = list()
+    laopofiles = list()
+
+    result = source_mysql(f"select p from xp where uid = '{uid}'" )
+    if True:
+        pics = glob.glob("/root/seasons_bot/moe/images_2/men/*jpg")
+        b = rd.sample( pics, n )
+        for a in b:
+            laoponames.append( moe_name_back(os.path.basename(a).strip(".jpg")) )
+            laopofiles.append( a )
+    else:
+        xps = set()
+        for tmp in result:
+            xps.add( f"'{tmp[0]}'" )
+        s = ','.join(xps)
+        result = source_mysql( f"select list from moe_list where xp in ({s})" )
+        all_names = list()
+        for r in result:
+            all_names.extend( b64d(r[0]).split('\t') )
+
+        if n <= len(all_names):
+            b = rd.sample( all_names, n )
+        else:
+            b = rd.sample( all_names*n, n )
+
+        for a in b:
+            laoponames.append( moe_name_back(a) )
+            laopofiles.append( "/root/seasons_bot/moe/images_all/"+a+".jpg" )
 
     return (laoponames,laopofiles )
 

@@ -25,6 +25,8 @@ os.system("mkdir images_2")
 
 for line in open("moe_caracter.list"):
     line = line.strip()
+    if ">>>" in line:
+        continue
     print(f"CONDUCT {line}")
     try:
         filename = line.replace("(","@_").replace(")","_@").replace("/","@@")

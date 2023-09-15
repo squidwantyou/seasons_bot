@@ -20,11 +20,18 @@ def suijilaopo(message,uid=0,gid=0):
         im1 = Image.new('RGB', (400, 32), "#FFF6DC")
         draw = ImageDraw.Draw(im1)
         font = ImageFont.truetype('fonts/msyh.ttf', 20)
-        text = f"{nickname}, 你抽到的老婆是:{laoponame}"
+        all_text = list()
+        all_text.append( f"{laoponame}: {nickname}, 今天工作辛苦了(鞠躬)" )
+        all_text.append( f"{laoponame}: 晚餐已经准备好了, {nickname}" )
+        text = rd.choice(all_text)
         draw.text((0,0), text, font=font, fill="#000000")
 
 
         im2 = Image.open(a)
+        if im2.mode in ('RGBA', 'LA'):
+            background = Image.new(im2.mode[:-1], im2.size, "#FFFFFF")
+            background.paste(im2, im2.split()[-1]) # omit transparency
+            im2 = background
 
 
         width_l =   [ x.width  for x in (im1,im2) ]

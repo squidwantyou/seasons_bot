@@ -35,13 +35,14 @@ import history
 import bf
 import suanming
 import suijilaopo
+import suijilaogong
 import hougong
 import dianzan
 import minesweeper_battle
 import random_say
 import neutreeko
 import xp
-
+import today
 
 def keyword(message,uid,gid = None):
     message = Message(message)
@@ -131,14 +132,18 @@ def keyword(message,uid,gid = None):
                 kouchou.kouchou(message,uid,gid)
             elif true_startswith( message, '/wu','/污'): 
                 wu.wu(message,uid,gid)
-            elif true_startswith( message, '/history','/today','/历史今天'): 
+            elif true_startswith( message, '/history','/历史今天'): 
                 history.history(message,uid,gid)
+            elif true_startswith( message, '/today','/今天'): 
+                today.today(message,uid,gid)
             elif true_startswith( message, '/算命','/sm','/lp','/运势','/yunshi','/ys','/jrrp' ): 
                 suanming.suanming(message,uid,gid)
             elif true_startswith( message, '/bf' ): 
                 bf.bf(message,uid,gid)
-            elif true_startswith( message, '/suijilaopo','/sjlp','/随机老婆' ): 
+            elif true_startswith( message, '/suijilaopo','/sjlp','/随机老婆' ,'/老婆'): 
                 suijilaopo.suijilaopo(message,uid,gid)
+            elif true_startswith( message, '/suijilaogong','/sjlg','/随机老公' ,'/老公'): 
+                suijilaogong.suijilaogong(message,uid,gid)
             elif true_startswith( message, '/后宫', '/hougong','/hg' ): 
                 hougong.hougong(message,uid,gid)
             elif true_startswith( message, '/dianzan', '/点赞' ): 

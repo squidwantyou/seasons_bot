@@ -1,12 +1,9 @@
 #!/usr/bin/env python
+import sys,os
 import re
 
-infile = "tmp"
-line = open(infile).readline()
 
-pat = re.compile("\>(\d+.*?)\<\/h2\>")
-
-s = pat.findall( line )
-
-for  i in s:
-    print(i)
+for line in open("api_puzzle.py"):
+    if "true_startswith" in line:
+        a = re.findall( "\'(.*?)\'",line)
+        print(" ".join(list(a)))
