@@ -209,6 +209,16 @@ def get_laogong(uid, n = 1):
 
     return (laoponames,laopofiles )
 
+def get_group_list():
+    try:
+        url = 'http://0.0.0.0:5700/get_group_list'
+        data = {} 
+        res = requests.post( url=url, data=data )
+        reply_msg = json.loads( res.content )
+        return reply_msg
+    except:
+        return "No group"
+
 # m = '/+bga [CQ:at,qq=937404959] zyyzxyz'
 # m = Message(m)
 # print(m.cqs[0].type)
