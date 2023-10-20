@@ -43,6 +43,7 @@ import random_say
 import neutreeko
 import xp
 import today
+import nazo
 
 def keyword(message,uid,gid = None):
     message = Message(message)
@@ -134,13 +135,13 @@ def keyword(message,uid,gid = None):
                 wu.wu(message,uid,gid)
             elif true_startswith( message, '/history','/历史今天'): 
                 history.history(message,uid,gid)
-            elif true_startswith( message, '/today','/今天'): 
+            elif true_startswith( message, '/today','/今天','/yesterday'): 
                 today.today(message,uid,gid)
-            elif true_startswith( message, '/算命','/sm','/lp','/运势','/yunshi','/ys','/jrrp' ): 
+            elif true_startswith( message, '/算命','/sm','/运势','/yunshi','/ys','/jrrp' ): 
                 suanming.suanming(message,uid,gid)
             elif true_startswith( message, '/bf' ): 
                 bf.bf(message,uid,gid)
-            elif true_startswith( message, '/suijilaopo','/sjlp','/随机老婆' ,'/老婆'): 
+            elif true_startswith( message, '/suijilaopo','/sjlp','/随机老婆' ,'/老婆','/lp'): 
                 suijilaopo.suijilaopo(message,uid,gid)
             elif true_startswith( message, '/suijilaogong','/sjlg','/随机老公' ,'/老公'): 
                 suijilaogong.suijilaogong(message,uid,gid)
@@ -154,6 +155,8 @@ def keyword(message,uid,gid = None):
                 random_say.rds(message,uid,gid)
             elif true_startswith( message, '/ntk','/neutreeko','/三连棋'): 
                 neutreeko.ntk(message,uid,gid)
+            elif true_startswith( message, '/nazo'): 
+                nazo.nazo(message,uid,gid)
             elif true_startswith( message, '/xp','/XP'): 
                 xp.xp(message,uid,gid)
             elif true_startswith( message, '/-' ): 

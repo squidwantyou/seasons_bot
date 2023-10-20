@@ -920,6 +920,9 @@ def pzjqr( message, uid, gid ):
         analysis.send_msg(m,uid=uid,gid=gid)
 
     elif path.isdigit():  # if query historic puzzle
+        if int(path) == 114514:
+            send_msg(f"[CQ:image,file=114514.png]",uid=uid,gid=gid)
+            return
         try:
             report_status(gid,i_d = int(path) )
         except Exception as e:
