@@ -30,7 +30,7 @@ def today(message,uid=0,gid=0):
 
         timestr = f"{query_time.year}-{query_time.month}-{query_time.day}"
 
-        if not os.path.isfile(f"data/images/news/{timestr}.jpg"):
+        if not os.path.isfile(f"data/images/news/{timestr}.jpg") or len(open(f"data/images/news/{timestr}.jpg").read()) <10 :
             if current == query_time:
                 os.system(f"wget --no-check-certificate  -O data/images/news/{timestr}.jpg https://xvfr.com/60s.php")
             else:

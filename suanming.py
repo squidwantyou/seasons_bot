@@ -43,6 +43,7 @@ class Yunshi:
         self.program()
         self.touhoumusic()
         self.cnsinger()
+        self.add_common("fanhao","今日番号")
         self.add_common("eusinger","今日欧美歌手")
         self.add_common("jpsinger","今日日本歌手")
         self.add_common("mgmusicer","今日音游曲师")

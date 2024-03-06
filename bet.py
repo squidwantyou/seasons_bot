@@ -86,18 +86,27 @@ def bet( message, uid, gid ):
     except:
         path = ''
 
-    if path == '':    # no arguments, report 
+    if message.text.split()[0] in ("/开盘","/betopen"):
+        if uid!=605378861:
+            return
+        
+        pass
+    elif message.text.split()[0] in ("/收盘","/betstop"):
+        pass
+    elif message.text.split()[0] in ("/停盘","/betterminate"):
+        pass
+    elif message.text.split()[0] in ("/押","/bet") and path != '':
+        pass
+    elif path == '':    # no arguments, report 
         bet = load_last_bet()
         if not bet:
             analysis.send_msg(gid =gid, m ="当前没有盘口")
             return
         else:
             analysis.send_msg(f"当前盘口: {bet.show_str()} ")
-            
+    else:
+        pass
+  
          
-    elif path == 'stop': # end current puzzle
-        finish_puzzle(gid)
-        analysis.send_msg(gid =gid, m ="Thank you for playing.")
-        return 
 
 

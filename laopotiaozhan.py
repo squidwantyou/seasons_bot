@@ -76,21 +76,24 @@ def make_hougong( message,uid,gid, laoponames, laopofiles ):
     dst.save('data/images/hougong.jpg')
     return imlist
 
-def hougong(message,uid=0,gid=0):
-    print(">>>>> Called hougong")
+def laopotiaozhan(message,uid=0,gid=0):
+    print(">>>>> Called laopotiaozhan")
     try:
-        if message.text.split()[0] in ("/dhg", "/大后宫"):
+        if True:
             laoponames, laopofiles = analysis.get_laopo(uid,10)
+            c = rd.randrange(10)
+            cname  = laoponames[c]
+            cfile  = laopofiles[c]
             imlist1 = make_hougong( message = message, uid=uid, gid=gid ,laoponames = laoponames[:5], laopofiles = laopofiles[:5] )
             imlist2 = make_hougong( message = message, uid=uid, gid=gid ,laoponames = laoponames[5:10], laopofiles = laopofiles[5:10] )
 
             W  = imlist1[0].width
-            tH = max(imlist1[0].height + imlist1[2].height , imlist1[0].height + imlist1[2].height)
+            tH = max(imlist1[0].height + imlist1[2].height , imlist2[0].height + imlist2[2].height)
             tW = imlist1[0].width + imlist1[3].width + imlist2[0].width + imlist2[3].width
 
             sW = imlist1[0].width + imlist1[3].width 
 
-            dst = Image.new('RGB', ( tW, tH ), "#FFF6DC" )
+            dst = Image.new('RGB', ( tW, tH + 64 ), "#FFF6DC" )
 
             dst.paste( imlist1[0], (0,0 ) )
             dst.paste( imlist1[2], (0,imlist1[0].height ) )
@@ -104,15 +107,17 @@ def hougong(message,uid=0,gid=0):
             dst.paste( imlist2[4], (sW + W , imlist2[3].height ) )
             dst.paste( imlist2[1], (sW + W, imlist2[3].height + imlist2[4].height ) )
 
-            dst.save('data/images/hougong.jpg')
+            draw = ImageDraw.Draw(dst)
+            font = ImageFont.truetype('fonts/msyh.ttf', 32)
+            text = f"{cname} 是哪一位呢?"
+            text = f"救赎之道,就在其中...."
+            draw.text((0,tH ), text, font=font, fill="#000000")
 
-            m = "[CQ:image,file=hougong.jpg]"
+            dst.save('data/images/laopotiaozhan.jpg')
+
+            m = "[CQ:image,file=laopotiaozhan.jpg]"
             analysis.send_msg(m,uid=uid,gid=gid)
-            pass
-        else:
-            laoponames, laopofiles = analysis.get_laopo(uid,5)
-            imlist = make_hougong( message = message, uid=uid, gid=gid ,laoponames = laoponames, laopofiles = laopofiles )
-            m = "[CQ:image,file=hougong.jpg]"
+            m = f"/delay 20 /dianzan {cname}"
             analysis.send_msg(m,uid=uid,gid=gid)
 
     except Exception as e:

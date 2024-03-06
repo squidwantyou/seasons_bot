@@ -58,7 +58,7 @@ def dianzan(message,uid=0,gid=0):
     except Exception as e:
         print(e)
         sys.stdout.flush()
-        analysis.send_msg("是个女人就是你老婆么?",uid=uid,gid=gid)
+        analysis.send_msg("你好棒哦",uid=uid,gid=gid)
 
 
 

@@ -146,3 +146,10 @@ moe/image_2.tar
 moe/images_all/
 moe/raw/
 
+session.token
+
+auto_backup/
+qq.log.bak
+rabbitmapall/
+
+

@@ -44,6 +44,9 @@ import neutreeko
 import xp
 import today
 import nazo
+import bunny
+import laopotiaozhan
+import girlquest
 
 def keyword(message,uid,gid = None):
     message = Message(message)
@@ -145,8 +148,10 @@ def keyword(message,uid,gid = None):
                 suijilaopo.suijilaopo(message,uid,gid)
             elif true_startswith( message, '/suijilaogong','/sjlg','/随机老公' ,'/老公'): 
                 suijilaogong.suijilaogong(message,uid,gid)
-            elif true_startswith( message, '/后宫', '/hougong','/hg' ): 
+            elif true_startswith( message, '/后宫', '/hougong','/hg', '/dhg','/大后宫'  ): 
                 hougong.hougong(message,uid,gid)
+            elif true_startswith( message, '/xzlp' ): 
+                laopotiaozhan.laopotiaozhan(message,uid,gid)
             elif true_startswith( message, '/dianzan', '/点赞' ): 
                 dianzan.dianzan(message,uid,gid)
             elif true_startswith( message, '/mwb','/msb', '/扫雷','/猫尾巴' ): 
@@ -159,6 +164,10 @@ def keyword(message,uid,gid = None):
                 nazo.nazo(message,uid,gid)
             elif true_startswith( message, '/xp','/XP'): 
                 xp.xp(message,uid,gid)
+            elif true_startswith( message, '/bunny','/checkbunny','/bunnymap'): 
+                bunny.bunny(message,uid,gid)
+            elif true_startswith( message, '/dm','/动漫达人'): 
+                girlquest.dm(message,uid,gid)
             elif true_startswith( message, '/-' ): 
                 fother.other(message,uid,gid)
             else:
