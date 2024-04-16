@@ -52,7 +52,7 @@ def make_puzzle(gid=None, uid=0):
     height_l  = [ x.height for x in imlist ]
     tmp = list()
     for im in imlist:
-        im = im.resize( (W, int( W*im.height*1.0/im.width)), Image.ANTIALIAS ) 
+        im = im.resize( (W, int( W*im.height*1.0/im.width)), Image.LANCZOS ) 
         tmp.append(im)
     imlist = tmp
     

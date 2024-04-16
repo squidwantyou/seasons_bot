@@ -15,12 +15,12 @@ def dianzan(message,uid=0,gid=0):
     print(f">>>>> select dianzan {message.text}")
     sys.stdout.flush()
     try:
-        if len(message.text.split()) > 1 and os.path.isfile(f"/root/seasons_bot/moe/images_all/{message.text.split()[1]}.jpg"):
+        if len(message.text.split()) > 1 and os.path.isfile(f"/home/ffallrain/seasons_bot/moe/images_all/{message.text.split()[1]}.jpg"):
             name = message.text.split()[1]
             nickname = analysis.get_nick_name(message,gid,uid)
-            a = f"/root/seasons_bot/moe/images_all/{name}.jpg"
+            a = f"/home/ffallrain/seasons_bot/moe/images_all/{name}.jpg"
         else:
-            pics = glob.glob("/root/seasons_bot/moe/images_2/*jpg")
+            pics = glob.glob("/home/ffallrain/seasons_bot/moe/images_2/*jpg")
             a = rd.choice( pics )
             name = os.path.basename(a).strip(".jpg")
             nickname = analysis.get_nick_name(message,gid,uid)

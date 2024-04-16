@@ -153,3 +153,5 @@ qq.log.bak
 rabbitmapall/
 
 
+session.token
+backup.sh

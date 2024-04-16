@@ -5,7 +5,7 @@ import re
 import analysis
 
 apiurl = "http://www.loliapi.com/bg/"
-# apiurl = "https://api.oick.cn/random/api.php?type=pe"
+#apiurl = "https://api.oick.cn/random/api.php?type=pe"
 
 def ecy(message,uid=0,gid=0):
     print(">>>>> Called ecy")
@@ -15,7 +15,7 @@ def ecy(message,uid=0,gid=0):
             'From': 'youremail@domain.example', 
             'referer':'www.baidu.com'
         }
-        data = requests.get(apiurl,headers=headers,verify=False)
+        data = requests.get(apiurl,headers=headers,verify=True)
         data=data.content
         with open("data/images/ecy.jpg",'wb') as ofp:
             ofp.write(data)

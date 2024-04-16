@@ -51,7 +51,7 @@ def make_fig(s ):
             background = Image.new(im.mode[:-1], im.size, "#FFFFFF")
             background.paste(im, im.split()[-1]) # omit transparency
             im = background
-        im = im.resize( (W,H) , Image.ANTIALIAS ) 
+        im = im.resize( (W,H) , Image.LANCZOS ) 
         imlist.append(im)
 
     dst = Image.new('RGB', ( W*len(imlist), H), "#FFFFFC" )

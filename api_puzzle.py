@@ -54,15 +54,15 @@ def keyword(message,uid,gid = None):
         if true_startswith( message, '/' ): 
             if true_startswith( message, '/help','/list','/帮助' ): 
                 fhelp.fhelp(message,uid=uid,gid=gid)
-            elif true_startswith( message, '/笑话','/苏联笑话' ): 
+            elif true_startswith( message, '/笑话','/苏联笑话' ):  #
                 fc.xiaohua(message,uid,gid)
 #            elif true_startswith( message, '/色图','/瑟图','/setu' ): 
 #                fc.setu(message,uid,gid)
-            elif true_startswith( message, '/添加色图','/加入瑟图','/添加瑟图','/加入色图'): 
+            elif true_startswith( message, '/添加色图','/加入瑟图','/添加瑟图','/加入色图'):  #
                 fc.add_setu(message,uid,gid)
-            elif true_startswith( message, '/+bga' ): 
+            elif true_startswith( message, '/+bga' ):  #
                 fc.addid(message,uid,gid)
-            elif true_startswith( message, '/?bga' ): 
+            elif true_startswith( message, '/?bga' ):  #
                 fc.getid(message,uid,gid)
             elif true_startswith( message, '/roll' ): 
                 fc.roll(message,uid,gid)
@@ -84,14 +84,14 @@ def keyword(message,uid,gid = None):
                 guess_number_six.guess_number(message,uid,gid)
             elif true_startswith( message, '/诗词' ,'/一次元'): 
                 fc.shici(message,uid,gid)
-            elif true_startswith( message, '/土味' ,'/twqh','/土味情话'): 
-                fc.tuweiqinghua(message,uid,gid)
-            elif true_startswith( message, '/情话' ,'/qh'): 
-                fc.tuweiqinghua(message,uid,gid)
-            elif true_startswith( message, '/二次元','/ecy' ,'/水煮鱼' ): 
-                ecy.ecy(message,uid,gid)
-            elif true_startswith( message, '/三次元','/scy','/酸菜鱼' ): 
-                scy.scy(message,uid,gid)
+            #elif true_startswith( message, '/土味' ,'/twqh','/土味情话'):   #
+            #    fc.tuweiqinghua(message,uid,gid)
+            #elif true_startswith( message, '/情话' ,'/qh'): 
+            #    fc.tuweiqinghua(message,uid,gid)
+            #elif true_startswith( message, '/二次元','/ecy' ,'/水煮鱼' ): 
+            #    ecy.ecy(message,uid,gid)
+            #elif true_startswith( message, '/三次元','/scy','/酸菜鱼' ): 
+            #    scy.scy(message,uid,gid)
             elif true_startswith( message, '/车万','/touhou','/松鼠鱼' ): 
                 touhou.touhou(message,uid,gid)
             elif true_startswith( message, '/摸鱼','/moyu' ): 
@@ -112,8 +112,8 @@ def keyword(message,uid,gid = None):
                 anwei.anwei(message,uid,gid)
             elif true_startswith( message, '/小姐姐','/四次元', '/girl','/臭鳜鱼'  ):  
                 douyingirl.douyingirl(message,uid,gid)
-            elif true_startswith( message, '/小哥哥','/boy','/烤鱼'):  
-                douyinboy.douyinboy(message,uid,gid)
+            #elif true_startswith( message, '/小哥哥','/boy','/烤鱼'):  
+            #    douyinboy.douyinboy(message,uid,gid)
             elif true_startswith( message, '/猫猫','/cat', '/miao','/喵' ):  
                 cat.cat(message,uid,gid)
             elif true_startswith( message, '/dog' ):  
@@ -122,8 +122,8 @@ def keyword(message,uid,gid = None):
                 echo.echo(message,uid,gid)
             elif true_startswith( message, '/9say' ): 
                 say9.say9(message,uid,gid)
-            elif true_startswith( message, '/xqs','/kfc','/KFC','/星期四' ): 
-                xqs.xqs(message,uid,gid)
+            #elif true_startswith( message, '/xqs','/kfc','/KFC','/星期四' ): 
+            #    xqs.xqs(message,uid,gid)
             elif true_startswith( message, '/pz','/碰撞' ): 
                 pzjqr.pzjqr(message,uid,gid)
             elif true_startswith( message, '/gstone'): 
@@ -136,10 +136,10 @@ def keyword(message,uid,gid = None):
                 kouchou.kouchou(message,uid,gid)
             elif true_startswith( message, '/wu','/污'): 
                 wu.wu(message,uid,gid)
-            elif true_startswith( message, '/history','/历史今天'): 
-                history.history(message,uid,gid)
-            elif true_startswith( message, '/today','/今天','/yesterday'): 
-                today.today(message,uid,gid)
+            #elif true_startswith( message, '/history','/历史今天'): 
+            #    history.history(message,uid,gid)
+            #elif true_startswith( message, '/today','/今天','/yesterday'): 
+            #    today.today(message,uid,gid)
             elif true_startswith( message, '/算命','/sm','/运势','/yunshi','/ys','/jrrp' ): 
                 suanming.suanming(message,uid,gid)
             elif true_startswith( message, '/bf' ): 

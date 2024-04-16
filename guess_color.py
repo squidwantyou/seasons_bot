@@ -260,7 +260,7 @@ def guess_color(message,uid,gid):
             else: # if right
                 emoji = query_to_emoji(query)
                 send_msg(gid=gid,m=f"您TQL，没错，就是 {emoji}") 
-                send_msg(gid=gid,m="/ecy") 
+                # send_msg(gid=gid,m="/ecy") 
                 #log_into_database(answer, log+f" {query}:{A}:{B}", finished=1)# log into database
                 #report_status(gid=gid) # report current status
                 # finish current puzzle

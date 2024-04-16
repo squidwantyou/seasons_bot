@@ -3,18 +3,17 @@ import requests
 import json
 import re
 import analysis
-
-#apiurl = "https://tuapi.eees.cc/api.php?category=meinv"
-apiurl = 'https://3650000.xyz/api/?type=json'
-apiurl = "https://api.xiaobaibk.com/api/pic/?pic=meizi"
-
-
+import sys,os
 
 def bunny(message,uid=0,gid=0):
     try:
         l = message.text.lstrip("/bunny ")
         all_bunny = dict()
         for line in open("bunny.txt"):
+            line = line.strip("\n")
+            line = line.strip("\r")
+            line = line.strip("\n")
+            line = line.strip("\r")
             a,b = line.strip().split(" x ")
             if a not in all_bunny:
                 all_bunny[a] = set()
@@ -25,6 +24,10 @@ def bunny(message,uid=0,gid=0):
 
         if "/bunny" in message.text and "map" not in message.text:
             for line in l.split("\n"):
+                line = line.strip("\n")
+                line = line.strip("\r")
+                line = line.strip("\n")
+                line = line.strip("\r")
                 a,b = line.strip().split(" x ")
                 if a not in all_bunny:
                     all_bunny[a] = set()
@@ -40,8 +43,9 @@ def bunny(message,uid=0,gid=0):
 
             analysis.send_msg("知道啦~",uid=uid,gid=gid)
 
-        elif "/checkbunny" in message.text:
+        elif "/checkbunny" in message.text or '/bunnycheck' in message.text:
             query = message.text.split()[1]
+            query = query.strip().lstrip()
             m = "\n".join( sorted(all_bunny[query]) )
             m = "Partners: \n" + m 
             analysis.send_msg(m,uid=uid,gid=gid)
@@ -64,9 +68,6 @@ def bunny(message,uid=0,gid=0):
 
 
     except Exception as e:
-        print(e)
+        sys.stderr.write(str(e))
         analysis.send_msg("故障",uid=uid,gid=gid)
 
-# scy('',gid=144744787)
-
-# W-3-1 x W-4-1

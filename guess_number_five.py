@@ -10,6 +10,17 @@ n_trials = 0
 def error(gid = 0):
     send_msg(gid=gid,m="呜呜，又出错了")
 
+def ok_trial( candidates, trial,answer ):
+    remove = set()
+    for c in candidates:
+        a,b = analyze_query( answer,trial )
+        ac,bc = analyze_query( c,trial )
+        if a==ac and b==bc:
+            pass
+        else:
+            remove.add(c)
+    return remove 
+
 def truncate( candidates, trials,answer ):
     remove = set()
     for trial in trials[-1:]:
@@ -37,11 +48,16 @@ def make_puzzle():
         else:
             break
         trial = f"%0{L}d"%rd.randrange( 0, 10**L )
+
         if trial != answer:
             a,b = analyze_query( answer,trial )
-            trials.append(trial)
-            log += f"{trial}:{a}:{b} "
-        candidates = truncate( candidates, trials, answer )
+            remove = ok_trial(candidates,trial,answer)
+            if len(remove) > 0:
+                trials.append(trial)
+                log += f"{trial}:{a}:{b} "
+                #candidates = truncate( candidates, trials, answer )
+                candidates = candidates - remove
+
 
     log = log.strip()
     cmd = f"INSERT INTO gn5 ( answer,queries, status ) VALUES ( '{answer}', '{log}', 0 )"

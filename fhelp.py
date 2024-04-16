@@ -8,7 +8,7 @@ def fhelp(message,uid=0,gid=0):
     try:
         m = '所有口令：\n'
         for line in open("api_puzzle.py"):
-            if "true_startswith" in line:
+            if "true_startswith" in line and "#" not in line:
                 a = re.findall( "\'(.*?)\'",line)
                 m = m + " ".join(list(a)) + "\n"
         m += "注：同一行的口令作用完全相同（\n"

@@ -33,7 +33,7 @@ def rds(message,uid=0,gid=0):
         
         Nl = len(text.split("\n"))
 
-        pics = glob.glob("/root/seasons_bot/moe/images_2/*jpg")
+        pics = glob.glob("/home/ffallrain/seasons_bot/moe/images_2/*jpg")
         a = rd.choice( pics )
         name = analysis.moe_name_back(os.path.basename(a).strip(".jpg"))
         laoponames,laopofiles = analysis.get_laopo(uid=uid,n=1)

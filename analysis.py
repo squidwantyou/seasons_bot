@@ -35,7 +35,7 @@ def send_msg(m,uid=0,gid=0,at = False,to_image=False):
             word_css = 'fonts/msyh.ttf'
             font = ImageFont.truetype(word_css,word_size,encoding='unic') 
             #font = ImageFont.core.getfont(word_css,word_size,encoding='unic') 
-            text_width, text_height = font.getsize( m )
+            text_width, text_height = font.getbbox( m )[2:4]
             text_height = len(m.split("\n")) * 20 + 16
             text_width  = max( [ 10*len(x) for x in m.split("\n") ] )
 
@@ -151,7 +151,7 @@ def get_laopo(uid, n = 1):
 
     result = source_mysql(f"select p from xp where uid = '{uid}'" )
     if not result:
-        pics = glob.glob("/root/seasons_bot/moe/images_2/*jpg")
+        pics = glob.glob("/home/ffallrain/seasons_bot/moe/images_2/*jpg")
         b = rd.sample( pics, n )
         for a in b:
             laoponames.append( moe_name_back(os.path.basename(a).strip(".jpg")) )
@@ -173,7 +173,7 @@ def get_laopo(uid, n = 1):
 
         for a in b:
             laoponames.append( moe_name_back(a) )
-            laopofiles.append( "/root/seasons_bot/moe/images_all/"+a+".jpg" )
+            laopofiles.append( "/home/ffallrain/seasons_bot/moe/images_all/"+a+".jpg" )
 
     return (laoponames,laopofiles )
 
@@ -183,7 +183,7 @@ def get_laogong(uid, n = 1):
 
     result = source_mysql(f"select p from xp where uid = '{uid}'" )
     if True:
-        pics = glob.glob("/root/seasons_bot/moe/images_2/men/*jpg")
+        pics = glob.glob("/home/ffallrain/seasons_bot/moe/images_2/men/*jpg")
         b = rd.sample( pics, n )
         for a in b:
             laoponames.append( moe_name_back(os.path.basename(a).strip(".jpg")) )
@@ -205,7 +205,7 @@ def get_laogong(uid, n = 1):
 
         for a in b:
             laoponames.append( moe_name_back(a) )
-            laopofiles.append( "/root/seasons_bot/moe/images_all/"+a+".jpg" )
+            laopofiles.append( "/home/ffallrain/seasons_bot/moe/images_all/"+a+".jpg" )
 
     return (laoponames,laopofiles )
 

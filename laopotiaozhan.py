@@ -46,7 +46,7 @@ def make_hougong( message,uid,gid, laoponames, laopofiles ):
     
     tmp = list()
     for im in imlist:
-        im = im.resize( (W, int( W*im.height*1.0/im.width)), Image.ANTIALIAS ) 
+        im = im.resize( (W, int( W*im.height*1.0/im.width)), Image.LANCZOS ) 
         tmp.append(im)
     imlist = tmp
     
@@ -62,7 +62,7 @@ def make_hougong( message,uid,gid, laoponames, laopofiles ):
 
     for i in (1,3,4):
         newsize = (sW, int(imlist[i].height*ratio))
-        imlist[i] = imlist[i].resize( newsize, Image.ANTIALIAS ) 
+        imlist[i] = imlist[i].resize( newsize, Image.LANCZOS ) 
 
     dst = Image.new('RGB', ( tW, tH + 96), "#FFF6DC" )
     dst.paste(im1, (0, 0))
