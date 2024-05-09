@@ -8,6 +8,7 @@ import PIL
 from PIL import Image, ImageFont , ImageDraw
 import glob
 import random as rd
+import fuzzywuzzy.process as fp
 
 
 def dianzan(message,uid=0,gid=0):
@@ -20,9 +21,16 @@ def dianzan(message,uid=0,gid=0):
             nickname = analysis.get_nick_name(message,gid,uid)
             a = f"/home/ffallrain/seasons_bot/moe/images_all/{name}.jpg"
         else:
+            name = message.text.split()[1]
             pics = glob.glob("/home/ffallrain/seasons_bot/moe/images_2/*jpg")
-            a = rd.choice( pics )
-            name = os.path.basename(a).strip(".jpg")
+            allname = [ os.path.basename(x).strip(".jpg") for x in pics ]
+            match1 = fp.extract( name, allname, limit=1 )[0][0]
+
+            name = match1
+            a = f"/home/ffallrain/seasons_bot/moe/images_2/{name}.jpg"
+
+            #a = rd.choice( pics )
+            #name = os.path.basename(a).strip(".jpg")
             nickname = analysis.get_nick_name(message,gid,uid)
 
         im1 = Image.new('RGB', (400, 32), "#FFF6DC")

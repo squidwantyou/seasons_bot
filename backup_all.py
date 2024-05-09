@@ -64,7 +64,7 @@ def backup_files( gid, root = True, file_root = None, dir_name = None , folder_i
 
     for f in file_list:
         if f['file_id'] not in file_id_list:
-            if f['file_size'] > 1024*1024*100 :
+            if f['file_size'] > 1024*1024*200 :
                 print( f"Size too big: {file_root}/{f['file_name']}" )
                 continue
             try:
@@ -116,7 +116,7 @@ def backupall():
 
     for gid in all_group:
         if gid == 144744787:
-            continue
+#            continue
             backup_member(gid)
             backup_files(gid)
         if gid == 528343595:

@@ -25,7 +25,7 @@ def broadcast_all( m ):
 
 if __name__ == "__main__":
     assert len(sys.argv) > 1
-    cmd = " ".join(sys.argv[1:] )
-    broadcast_all(cmd)
+    #cmd = " ".join(sys.argv[1:] )
+    #broadcast_all(cmd)
 
 

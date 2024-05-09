@@ -47,6 +47,7 @@ import nazo
 import bunny
 import laopotiaozhan
 import girlquest
+import zun
 
 def keyword(message,uid,gid = None):
     message = Message(message)
@@ -164,10 +165,12 @@ def keyword(message,uid,gid = None):
                 nazo.nazo(message,uid,gid)
             elif true_startswith( message, '/xp','/XP'): 
                 xp.xp(message,uid,gid)
-            elif true_startswith( message, '/bunny','/checkbunny','/bunnymap'): 
+            elif true_startswith( message, '/bunny','/checkbunny','/bunnymap','/explorebunny'): 
                 bunny.bunny(message,uid,gid)
             elif true_startswith( message, '/dm','/动漫达人'): 
                 girlquest.dm(message,uid,gid)
+            elif true_startswith( message, '/zun','/2un'): 
+                zun.zun(message,uid,gid)
             elif true_startswith( message, '/-' ): 
                 fother.other(message,uid,gid)
             else:
