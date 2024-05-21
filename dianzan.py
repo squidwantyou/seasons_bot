@@ -21,16 +21,11 @@ def dianzan(message,uid=0,gid=0):
             nickname = analysis.get_nick_name(message,gid,uid)
             a = f"/home/ffallrain/seasons_bot/moe/images_all/{name}.jpg"
         else:
-            name = message.text.split()[1]
             pics = glob.glob("/home/ffallrain/seasons_bot/moe/images_2/*jpg")
             allname = [ os.path.basename(x).strip(".jpg") for x in pics ]
-            match1 = fp.extract( name, allname, limit=1 )[0][0]
 
-            name = match1
-            a = f"/home/ffallrain/seasons_bot/moe/images_2/{name}.jpg"
-
-            #a = rd.choice( pics )
-            #name = os.path.basename(a).strip(".jpg")
+            a = rd.choice( pics )
+            name = os.path.basename(a).strip(".jpg")
             nickname = analysis.get_nick_name(message,gid,uid)
 
         im1 = Image.new('RGB', (400, 32), "#FFF6DC")
@@ -67,7 +62,5 @@ def dianzan(message,uid=0,gid=0):
         print(e)
         sys.stdout.flush()
         analysis.send_msg("你好棒哦",uid=uid,gid=gid)
-
-
 
 

@@ -10,6 +10,7 @@ import pickle
 import numpy as np
 from analysis import source_mysql,send_msg
 import analysis
+from PIL import Image
 
 FILENAME='pzjqr.png'
 N = 16
@@ -515,6 +516,7 @@ def test(ax):
 
 def draw_init():
     plt.clf()
+    plt.figure(dpi=300)
     fig,ax = plt.subplots(figsize = (8,8))
 
     ax.set_xlim( (-0.5-margin, N-0.5+margin) )
@@ -546,8 +548,14 @@ def draw_token(ax,locs,alpha = 0.7):
                 poly = mpatches.RegularPolygon( (x,y),3,radius=0.4,color='black',alpha = 0.5)
             ax.add_artist( poly )
         if t in ['ro','bo','go','yo']:
-            poly = mpatches.Circle( (x,y),radius=0.4,color=t[0],alpha = 0.9)
-            ax.add_artist( poly )
+            if t == 'bo':
+                qln = Image.open("data/images/qln_pz3.png")
+                data = np.array(qln)
+                ax.imshow( data, extent = [ x-0.45,x+0.45,y-0.45,y+0.45 ] )
+                pass
+            else:
+                poly = mpatches.Circle( (x,y),radius=0.4,color=t[0],alpha = 0.9)
+                ax.add_artist( poly )
 
         if t == 'o':
             n = 30
@@ -943,9 +951,9 @@ def pzjqr( message, uid, gid ):
                 analysis.send_msg(f"您的新解是:{path}",uid=uid,gid=gid)
                 report_status(gid,i_d = i_d )
             else:
-                draw_state(board,f"data/images/tmp_{gid}_{FILENAME}")
+                draw_state(board,f"data/images/tmp_{gid}_{FILENAME}",xlabel = "不太正确哦 =_=" )
                 send_msg(f"[CQ:image,file=tmp_{gid}_{FILENAME}]",gid=gid)
-                analysis.send_msg("不太正确哦 =_=",uid=uid,gid=gid)
+                #analysis.send_msg("不太正确哦 =_=",uid=uid,gid=gid)
             pass
         except:
             analysis.send_msg("并不容易呢~",uid=uid,gid=gid)
@@ -992,9 +1000,9 @@ def pzjqr( message, uid, gid ):
                 analysis.send_msg(f"TQL! 您的解是:{path}",uid=uid,gid=gid,at=True)
                 report_status(gid)
             else:
-                draw_state(board,f"data/images/tmp_{gid}_{FILENAME}")
+                draw_state(board,f"data/images/tmp_{gid}_{FILENAME}",xlabel="似乎没有走到终点=_=" )
                 send_msg(f"[CQ:image,file=tmp_{gid}_{FILENAME}]",uid=uid,gid=gid)
-                analysis.send_msg("似乎没有走到终点=_=",uid=uid,gid=gid,at=True)
+                #analysis.send_msg("似乎没有走到终点=_=",uid=uid,gid=gid,at=True)
             pass
 
         except Exception as e :

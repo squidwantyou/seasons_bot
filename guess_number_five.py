@@ -115,7 +115,7 @@ def report_status(uid=None,gid=None):
     m = ''
     for trial in trials:
         query,A,B = trial.split(":")
-        m += f"{query}\t{A}A{B}B\n"
+        m += f"{query}\t {A}A{B}B\n"
     if status == 0:
         m += "输入 /5a2b xxxx 继续猜，或者/5a2b stop 停止猜数"
     else:
