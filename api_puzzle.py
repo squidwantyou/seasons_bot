@@ -48,6 +48,7 @@ import bunny
 import laopotiaozhan
 import girlquest
 import zun
+import seasonsquest
 
 def keyword(message,uid,gid = None):
     message = Message(message)
@@ -171,6 +172,8 @@ def keyword(message,uid,gid = None):
                 girlquest.dm(message,uid,gid)
             elif true_startswith( message, '/zun','/2un'): 
                 zun.zun(message,uid,gid)
+            elif true_startswith( message, '/seasonsquest','/sq'): 
+                seasonsquest.seasonsquest(message,uid,gid)
             elif true_startswith( message, '/-' ): 
                 fother.other(message,uid,gid)
             else:
